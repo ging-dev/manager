@@ -1,0 +1,1 @@
+<?php if (!defined('ACCESS')) die('Not access'); else $databases = array('db_host' => 'localhost', 'db_username' => 'root', 'db_password' => '', 'db_name' => 'esotalk', 'is_auto' => false); ?>
