@@ -53,9 +53,6 @@
     $configs = array();
     $jsons = null;
 
-    if (!function_exists('json_encode') || !function_exists('json_decode'))
-        include_once 'json.class.php';
-
     $pages = array(
         'current' => 1,
         'total' => 0,

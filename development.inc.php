@@ -94,7 +94,7 @@
     if (!DEVELOPMENT && is_file(REALPATH . '/' . DEVELOPMENT_FILE))
         @unlink(REALPATH . '/' . DEVELOPMENT_FILE);
 
-    define('AUTHOR', 'Izero');
+    define('AUTHOR', 'Izero & Itachi');
     define('VERSION', $version);
 
     unset($files);
