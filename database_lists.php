@@ -23,7 +23,7 @@
                     echo '<div class="title"><div class="ellipsis">' . $title . '</div></div>';
 
                     if (isset($_POST['accept'])) {
-                        if (!mysqli_query($GLOBALS['db'], "DROP DATABASE `$name`"))
+                        if (!mysqli_query($conn, "DROP DATABASE `$name`"))
                             echo '<div class="notice_failure">Xóa database thất bại: ' . mysqli_error() . '</div>';
                         else
                             goURL('database_lists.php');
@@ -53,7 +53,7 @@
             } else {
                 include_once 'header.php';
 
-                $query = mysqli_query($GLOBALS['db'], 'SHOW DATABASES');
+                $query = mysqli_query($conn, 'SHOW DATABASES');
 
                 if (is_object($query)) {
                     echo '<div class="title">' . $title . '</div>
@@ -61,7 +61,7 @@
 
                     while ($assoc = mysqli_fetch_assoc($query)) {
                         $name = $assoc['Database'];
-                        $count = mysqli_fetch_row(mysqli_query($GLOBALS['db'], 'SELECT COUNT(*) FROM `information_schema`.`tables` WHERE `table_schema`="' . $name . '"'))[0];
+                        $count = mysqli_fetch_row(mysqli_query($conn, 'SELECT COUNT(*) FROM `information_schema`.`tables` WHERE `table_schema`="' . $name . '"'))[0];
 
                         echo '<li>
                             <p>

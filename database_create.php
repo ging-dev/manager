@@ -25,12 +25,12 @@
                     $notice .= 'Chưa nhập đầy đủ thông tin';
                 else if (isDatabaseExists($name, null, true))
                     $notice .= 'Tên database đã tồn tại';
-                else if ($collection == MYSQL_COLLECTION_NONE && !@mysql_query('CREATE DATABASE `' . $name . '`', LINK_IDENTIFIER))
+                else if ($collection == MYSQL_COLLECTION_NONE && !@mysqli_query($conn, 'CREATE DATABASE `' . $name . '`'))
                     $notice .= 'Tạo database thất bại, có thể tên database đã tồn tại';
                 else if ($collection != MYSQL_COLLECTION_NONE && !preg_match('#^(.+?)' . MYSQL_COLLECTION_SPLIT . '(.+?)$#i', $collection, $matches))
                     $notice .= 'Mã hóa - Đối chiếu không hợp lệ';
-                else if ($collection != MYSQL_COLLECTION_NONE && !@mysql_query('CREATE DATABASE `' . $name . '` CHARACTER SET ' . $matches[1] . ' COLLATE ' . $matches[2]))
-                    $notice .= 'Tạo database thất bại: ' . mysql_error();
+                else if ($collection != MYSQL_COLLECTION_NONE && !@mysqli_query($conn, 'CREATE DATABASE `' . $name . '` CHARACTER SET ' . $matches[1] . ' COLLATE ' . $matches[2]))
+                    $notice .= 'Tạo database thất bại: ' . mysqli_error($conn);
                 else
                     goURL('database_lists.php');
 

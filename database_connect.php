@@ -33,9 +33,9 @@
         if (isDatabaseVariable($databases)) {
             define('IS_VALIDATE', true);
             define('IS_DATABASE_ROOT', empty($databases['db_name']) || $databases['db_name'] == null);
-            $GLOBALS['db'] = mysqli_connect($databases['db_host'], $databases['db_username'], $databases['db_password']);
+            $conn = @mysqli_connect($databases['db_host'], $databases['db_username'], $databases['db_password']);
 
-            if ($GLOBALS['db'] != false) {
+            if ($conn != false) {
                 define('ERROR_CONNECT', false);
 
                 function printDataType($default = null)
@@ -173,6 +173,7 @@
 
                 function isDatabaseExists($name, $igone = null, $isLowerCase = false, &$output = false)
                 {
+                    global $conn;
                     if ($isLowerCase) {
                         $name = strtolower($name);
 
@@ -180,7 +181,7 @@
                             $igone = strtolower($igone);
                     }
 
-                    $query = mysqli_query($GLOBALS['db'], 'SHOW DATABASES');
+                    $query = mysqli_query($conn, 'SHOW DATABASES');
 
                       if (is_object($query)) {
                         while ($assoc = mysqli_fetch_assoc($query)) {
@@ -201,6 +202,7 @@
 
                 function isTableExists($name, $igone = null, $isLowerCase = false, &$output = false)
                 {
+                    global $conn;
                     if ($isLowerCase) {
                         $name = strtolower($name);
 
@@ -208,7 +210,7 @@
                             $igone = strtolower($igone);
                     }
 
-                    $query = mysqli_query($GLOBALS['db'], 'SHOW TABLE STATUS');
+                    $query = mysqli_query($conn, 'SHOW TABLE STATUS');
 
                       if (is_object($query)) {
                         while ($assoc = mysqli_fetch_assoc($query)) {
@@ -229,6 +231,7 @@
 
                 function isColumnsExists($name, $table, $igone = null, $isLowerCase = false, &$output = false)
                 {
+                    global $conn;
                     if ($isLowerCase) {
                         $name = strtolower($name);
 
@@ -236,7 +239,7 @@
                             $igone = strtolower($igone);
                     }
 
-                    $query = mysqli_query($GLOBALS['db'], "SHOW COLUMNS FROM `$table`");
+                    $query = mysqli_query($conn, "SHOW COLUMNS FROM `$table`");
 
                       if (is_object($query)) {
                         while ($assoc = mysqli_fetch_assoc($query)) {
@@ -279,14 +282,15 @@
 
                 function getColumnsKey($table)
                 {
-                    $query = mysqli_query($GLOBALS['db'], "SHOW INDEXES FROM `$table` WHERE `Key_name`='PRIMARY'");
+                    global $conn;
+                    $query = mysqli_query($conn, "SHOW INDEXES FROM `$table` WHERE `Key_name`='PRIMARY'");
                     $key = null;
 
                     if (mysqli_num_rows($query) > 0) {
                         $key = mysqli_fetch_assoc($query);
                         $key = $key['Column_name'];
                     } else {
-                        $query = mysqli_query($GLOBALS['db'], "SHOW COLUMNS FROM `$table`");
+                        $query = mysqli_query($conn, "SHOW COLUMNS FROM `$table`");
                         $key = mysqli_fetch_assoc($query);
                         $key = $key['Field'];
                     }
@@ -298,12 +302,12 @@
                     if (isset($_GET['db_name']) == false || empty($_GET['db_name']) == true) {
                         define('IS_CONNECT', true);
                         define('ERROR_SELECT_DB', false);
-                    } else if (isset($_GET['db_name']) && empty($_GET['db_name']) == false && mysqli_select_db($GLOBALS['db'], $_GET['db_name'])) {
+                    } else if (isset($_GET['db_name']) && empty($_GET['db_name']) == false && mysqli_select_db($conn, $_GET['db_name'])) {
                         define('IS_CONNECT', true);
                         define('ERROR_SELECT_DB', false);
                         define('DATABASE_NAME', $_GET['db_name']);
                     }
-                } else if (empty($databases['db_name']) == false && $databases['db_name'] != null && mysqli_select_db($GLOBALS['db'], $databases['db_name'])) {
+                } else if (empty($databases['db_name']) == false && $databases['db_name'] != null && mysqli_select_db($conn, $databases['db_name'])) {
                     define('IS_CONNECT', true);
                     define('ERROR_SELECT_DB', false);
                     define('DATABASE_NAME', $databases['db_name']);

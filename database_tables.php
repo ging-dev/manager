@@ -12,7 +12,7 @@
 
         if (IS_CONNECT) {
             $title .= ': ' . DATABASE_NAME;
-            $query = mysqli_query($GLOBALS['db'], 'SHOW TABLE STATUS');
+            $query = mysqli_query($conn, 'SHOW TABLE STATUS');
 
             include_once 'header.php';
 
@@ -20,7 +20,7 @@
                 echo '<div class="title"><div class="ellipsis">' . $title . '</div></div>
                 <ul class="list_database">';
 
-                $count = mysqli_fetch_row(mysqli_query($GLOBALS['db'], 'SELECT COUNT(*) FROM `information_schema`.`tables` WHERE `table_schema`="' . DATABASE_NAME . '"'))[0];
+                $count = mysqli_fetch_row(mysqli_query($conn, 'SELECT COUNT(*) FROM `information_schema`.`tables` WHERE `table_schema`="' . DATABASE_NAME . '"'))[0];
 
                 if ($count == 0) {
                     echo '<li class="normal"><img src="icon/empty.png"/> <span class="empty">Không có bảng nào</span></li>';
@@ -42,7 +42,7 @@
                             </p>
                             <p>
                                 <span class="size">' . size($assoc['Data_length']) . '</span>, 
-                                <span class="count_columns">' . ($assoc['Rows'] == 0 ? mysqli_num_rows(mysqli_query($GLOBALS['db'], "SHOW COLUMNS FROM `$name`")) : $assoc['Rows']) . '</span>
+                                <span class="count_columns">' . ($assoc['Rows'] == 0 ? mysqli_num_rows(mysqli_query($conn, "SHOW COLUMNS FROM `$name`")) : $assoc['Rows']) . '</span>
                                 <span>cột</span>
                             </p>
                         </li>';

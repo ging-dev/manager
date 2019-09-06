@@ -25,8 +25,7 @@
                 $name = $databases['db_name'];
                 $auto = $databases['is_auto'];
                 $conn = @mysqli_connect($host, $username, $password);
-                
-
+                               
                 if ($auto && !isset($_POST['submit'])) {
                     if (!$conn)
                         $notice = '<div class="notice_failure">Không thể kết nối tới database</div>';
