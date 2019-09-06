@@ -676,7 +676,7 @@
                 $title = 'Chọn lựa: ' . DATABASE_NAME . ' > ' . $name;
                 $entrys = isset($_POST['entry']) && is_array($_POST['entry']) && count($_POST['entry']) > 0 ? $_POST['entry'] : null;
 
-                if (isset($_POST['delete']) && $entry != null) {
+                if (isset($_POST['delete']) && $entrys != null) {
                     $title = 'Xóa dữ liệu: ' . DATABASE_NAME . ' > ' . $name;
                     $key = getColumnsKey($name);
                     $isAllExists = true;
