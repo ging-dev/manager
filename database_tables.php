@@ -26,9 +26,8 @@
                         $entryHtml = null;
                         $listEntryHtml = null;
           
-                        foreach ($entrys AS $v) {
-                            $table = addslashes($v);
-                            if (isTableExists($table) == false) {
+                        foreach ($entrys AS $v) {               
+                            if (isTableExists(addslashes($v)) == false) {
                                 $isAllExists = false;
                                 break;
                             } else {
@@ -46,8 +45,7 @@
                                 $isDeleteAll = true;
     
                                 foreach ($entrys AS $v) {
-                                    $table = addslashes($v);
-                                    if (!mysqli_query($conn, "DROP TABLE `$table`")) {
+                                    if (!mysqli_query($conn, "DROP TABLE `" . addslashes($v) . "`")) {
                                         $isDeleteAll = false;
     
                                         echo '<div class="notice_failure">Xóa [<strong>' . $v . '</strong>] thất bại: ' . mysqli_error($conn) . '</div>';
