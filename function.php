@@ -19,16 +19,14 @@
         unset($dir);
     }
 
-    if (get_magic_quotes_gpc()) {
-        if (isset($_POST) && is_array($_POST)) {
-            foreach ($_POST AS $key => $value)
-                $_POST[$key] = is_string($value) ? stripslashes($value) : $value;
-        }
+    if (isset($_POST) && is_array($_POST)) {
+        foreach ($_POST AS $key => $value)
+            $_POST[$key] = is_string($value) ? stripslashes($value) : $value;
+    }
 
-        if (isset($_GET) && is_array($_GET)) {
-            foreach ($_GET AS $key => $value)
-                $_GET[$key] = is_string($value) ? stripslashes($value) : $value;
-        }
+    if (isset($_GET) && is_array($_GET)) {
+        foreach ($_GET AS $key => $value)
+            $_GET[$key] = is_string($value) ? stripslashes($value) : $value;
     }
 
     define('REALPATH', realpath('./'));
@@ -118,6 +116,8 @@
     }
     
     $login = (isset($_COOKIE['login']) && $_COOKIE['login'] == $configs['password']) ? true : false;
+    
+    if (! $login) setcookie('login', '');
     
     define('IS_LOGIN', $login);
 
