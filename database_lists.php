@@ -23,11 +23,12 @@
                     echo '<div class="title"><div class="ellipsis">' . $title . '</div></div>';
 
                     if (isset($_POST['accept'])) {
-                        if (!mysqli_query($conn, "DROP DATABASE `$name`"))
+                        if (!mysqli_query($conn, "DROP DATABASE `$name`")) {
                             echo '<div class="notice_failure">Xóa database thất bại: ' . mysqli_error() . '</div>';
-                        else
+                        } else {
                             goURL('database_lists.php');
-                    } else if (isset($_POST['not'])) {
+                        }
+                    } elseif (isset($_POST['not'])) {
                         goURL('database_lists.php');
                     }
 
@@ -93,7 +94,7 @@
                     </ul>';
                 }
             }
-        } else if (IS_CONNECT && !IS_DATABASE_ROOT) {
+        } elseif (IS_CONNECT && !IS_DATABASE_ROOT) {
             echo '<div class="title">' . $title . '</div>
             <div class="list">Bạn đang kết nối tới một database không thể vào danh sách database</div>
             <div class="title">Chức năng</div>
@@ -115,5 +116,3 @@
     }
 
     include_once 'database_close.php';
-
-?>

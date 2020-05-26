@@ -1,4 +1,6 @@
-<?php define('ACCESS', true);
+<?php
+
+define('ACCESS', true);
 
     include_once 'function.php';
 
@@ -25,18 +27,20 @@
                 $name = $databases['db_name'];
                 $auto = $databases['is_auto'];
                 $conn = @mysqli_connect($host, $username, $password);
-                               
+
                 if ($auto && !isset($_POST['submit'])) {
-                    if (!$conn)
+                    if (!$conn) {
                         $notice = '<div class="notice_failure">Không thể kết nối tới database</div>';
-                    else if (!empty($name) && !@mysqli_select_db($conn, $name))
+                    } elseif (!empty($name) && !@mysqli_select_db($conn, $name)) {
                         $notice = '<div class="notice_failure">Không thể chọn database</div>';
-                    else
+                    } else {
                         $go = true;
+                    }
                 }
-            } else if (!isset($_POST['submit'])) {
-                if (@is_file(REALPATH . '/' . PATH_DATABASE))
+            } elseif (!isset($_POST['submit'])) {
+                if (@is_file(REALPATH . '/' . PATH_DATABASE)) {
                     @unlink(REALPATH . '/' . PATH_DATABASE);
+                }
 
                 $notice = '<div class="notice_failure">Cấu hình database bị lỗi</div>';
             }
@@ -49,26 +53,28 @@
             $name = addslashes($_POST['name']);
             $auto = isset($_POST['is_auto']) && intval($_POST['is_auto']) == 1;
             $conn = @mysqli_connect($host, $username, $password);
-            
+
             if (empty($host) || empty($username)) {
                 $notice = '<div class="notice_failure">Chưa nhập đầy đủ thông tin</div>';
-            } else if (!$conn) {
+            } elseif (!$conn) {
                 $notice = '<div class="notice_failure">Không thể kết nối tới database</div>';
-            } else if (!empty($name) && !@mysqli_select_db($conn, $name)) {
+            } elseif (!empty($name) && !@mysqli_select_db($conn, $name)) {
                 $notice = '<div class="notice_failure">Không thể chọn database</div>';
             } else {
-                if (createDatabaseConfig($host, $username, $password, $name, $auto))
+                if (createDatabaseConfig($host, $username, $password, $name, $auto)) {
                     $go = true;
-                else
+                } else {
                     $notice = '<div class="notice_failure">Lưu cấu hình database thất bại</div>';
+                }
             }
         }
 
         if ($go) {
-            if (empty($name) || $name == null)
+            if (empty($name) || $name == null) {
                 goURL('database_lists.php');
-            else
+            } else {
                 goURL('database_tables.php');
+            }
         }
 
         echo '<div class="title">' . $title . '</div>';
@@ -97,5 +103,3 @@
     } else {
         goURL('login.php');
     }
-
-?>

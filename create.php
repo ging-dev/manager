@@ -1,4 +1,6 @@
-<?php define('ACCESS', true);
+<?php
+
+define('ACCESS', true);
 
     include_once 'function.php';
 
@@ -23,23 +25,25 @@
 
                 if (empty($_POST['name'])) {
                     echo 'Chưa nhập đầy đủ thông tin';
-                } else if (intval($_POST['type']) === 0 && file_exists($dir . '/' . $_POST['name'])) {
+                } elseif (intval($_POST['type']) === 0 && file_exists($dir . '/' . $_POST['name'])) {
                     echo 'Tên đã tồn tại dạng thư mục hoặc tập tin';
-                } else if (intval($_POST['type']) === 1 && file_exists($dir . '/' . $_POST['name'])) {
+                } elseif (intval($_POST['type']) === 1 && file_exists($dir . '/' . $_POST['name'])) {
                     echo 'Tên đã tồn tại dạng thư mục hoặc tập tin';
-                } else if (isNameError($_POST['name'])) {
+                } elseif (isNameError($_POST['name'])) {
                     echo 'Tên không hợp lệ';
                 } else {
                     if (intval($_POST['type']) === 0) {
-                        if (!@mkdir($dir . '/' . $_POST['name']))
+                        if (!@mkdir($dir . '/' . $_POST['name'])) {
                             echo 'Tạo thư mục thất bại';
-                        else
+                        } else {
                             goURL('index.php?dir=' . $dirEncode . $pages['paramater_1']);
-                    } else if (intval($_POST['type']) === 1) {
-                        if (!@file_put_contents($dir . '/' . $_POST['name'], '...'))
+                        }
+                    } elseif (intval($_POST['type']) === 1) {
+                        if (!@file_put_contents($dir . '/' . $_POST['name'], '...')) {
                             echo 'Tạo tập tin thất bại';
-                        else
+                        } else {
                             goURL('index.php?dir=' . $dirEncode . $pages['paramater_1']);
+                        }
                     } else {
                         echo 'Lựa chọn không hợp lệ';
                     }
@@ -70,5 +74,3 @@
     } else {
         goURL('login.php');
     }
-
-?>

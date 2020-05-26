@@ -18,7 +18,7 @@
 
             if ($username == null || $password == null) {
                 $notice .= 'Chưa nhập đầy đủ thông tin';
-            } else if (strtolower($username) != strtolower($configs['username']) || getPasswordEncode($password) != $configs['password']) {
+            } elseif (strtolower($username) != strtolower($configs['username']) || getPasswordEncode($password) != $configs['password']) {
                 $notice .= 'Sai tài khoản hoặc mật khẩu';
             } else {
                 setcookie('login', getPasswordEncode($password), time() + 3600*24*7);
@@ -39,22 +39,25 @@
         echo '<div class="title">' . $title . '</div>';
         echo $notice;
 
-        if (IS_CONFIG_UPDATE || IS_CONFIG_ERROR)
+        if (IS_CONFIG_UPDATE || IS_CONFIG_ERROR) {
             @unlink(REALPATH . '/' . PATH_CONFIG);
+        }
 
-        if (IS_CONFIG_UPDATE)
+        if (IS_CONFIG_UPDATE) {
             echo '<div class="notice_info">Cấu hình cập nhật sẽ đưa về mặc định</div>';
-        else if (IS_CONFIG_ERROR)
+        } elseif (IS_CONFIG_ERROR) {
             echo '<div class="notice_failure">Cấu hình bị lỗi sẽ đưa về mặc định</div>';
-        else if (!is_file(REALPATH . '/' . PATH_CONFIG))
+        } elseif (!is_file(REALPATH . '/' . PATH_CONFIG)) {
             echo '<div class="notice_info">Cấu hình không tồn tại nó sẽ được tạo</div>';
+        }
 
 
         if (!is_file(REALPATH . '/' . PATH_CONFIG)) {
-            if (createConfig())
+            if (createConfig()) {
                 echo '<div class="notice_info">Tài khoản: <strong>' . LOGIN_USERNAME_DEFAULT . '</strong>, Mật khẩu: <strong>' . LOGIN_PASSWORD_DEFAULT . '</strong></div>';
-            else
+            } else {
                 echo '<div class="notice_failure">Tạo cấu hình thất bại, hãy thử lại</div>';
+            }
         }
 
         echo '<div class="list">
@@ -69,5 +72,3 @@
 
         include_once 'footer.php';
     }
-
-?>

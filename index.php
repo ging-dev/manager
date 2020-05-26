@@ -24,8 +24,9 @@
             }
         }
 
-        if (!is_array($handler))
+        if (!is_array($handler)) {
             $handler = array();
+        }
 
         $dirEncode = rawurlencode($dir);
         $count = count($handler);
@@ -35,29 +36,32 @@
             $folders = array();
             $files = array();
 
-            foreach ($handler AS $entry) {
+            foreach ($handler as $entry) {
                 if ($entry != '.' && $entry != '..') {
                     if ($entry == DIRECTORY_FILE_MANAGER && IS_ACCESS_PARENT_PATH_FILE_MANAGER);
-                        /* Is hide directory File Manager */
-                    else if (is_dir($dir . '/' . $entry))
+                    /* Is hide directory File Manager */
+                    elseif (is_dir($dir . '/' . $entry)) {
                         $folders[] = $entry;
-                    else
+                    } else {
                         $files[] = $entry;
+                    }
                 }
             }
 
             if (count($folders) > 0) {
                 asort($folders);
 
-                foreach ($folders AS $entry)
+                foreach ($folders as $entry) {
                     $lists[] = array('name' => $entry, 'is_directory' => true);
+                }
             }
 
             if (count($files) > 0) {
                 asort($files);
 
-                foreach ($files AS $entry)
+                foreach ($files as $entry) {
                     $lists[] = array('name' => $entry, 'is_directory' => false);
+                }
             }
         }
 
@@ -70,7 +74,7 @@
             $item = null;
             $url = null;
 
-            foreach ($array AS $key => $entry) {
+            foreach ($array as $key => $entry) {
                 if ($key === 0) {
                     $seperator = preg_match('|^\/(.*?)$|', $dir) ? '/' : null;
                     $item = $seperator . $entry;
@@ -78,16 +82,18 @@
                     $item = '/' . $entry;
                 }
 
-                if ($key < count($array) - 1)
+                if ($key < count($array) - 1) {
                     $html .= '/<a href="index.php?dir=' . rawurlencode($url . $item) . '">';
-                else
+                } else {
                     $html .= '/';
+                }
 
                 $url .= $item;
                 $html .= substring($entry, 0, NAME_SUBSTR, NAME_SUBSTR_ELLIPSIS);
 
-                if ($key < count($array) - 1)
+                if ($key < count($array) - 1) {
                     $html .= '</a>';
+                }
             }
         }
 
@@ -100,7 +106,7 @@
             if (IS_INSTALL_ROOT_DIRECTORY) {
                 echo '<div class="title">Lỗi File Manager</div>
                 <div class="list">Bạn đang cài đặt File Manager trên thư mục gốc, hãy chuyển vào một thư mục</div>';
-            } else if (IS_ACCESS_FILE_IN_FILE_MANAGER) {
+            } elseif (IS_ACCESS_FILE_IN_FILE_MANAGER) {
                 echo '<div class="notice_info">Bạn không thể xem tập tin của File Manager nó đã bị chặn</div>';
             } else {
                 echo '<div class="notice_info">Bạn không thể xem thư mục của File Manager nó đã bị chặn</div>';
@@ -113,10 +119,11 @@
             if (preg_replace('|[a-zA-Z]+:|', '', str_replace('\\', '/', $dir)) != '/') {
                 $path = strrchr($dir, '/');
 
-                if ($path !== false)
+                if ($path !== false) {
                     $path = 'index.php?dir=' . rawurlencode(substr($dir, 0, strlen($dir) - strlen($path)));
-                else
+                } else {
                     $path = 'index.php';
+                }
 
                 echo '<li class="normal">
                     <img src="icon/back.png" style="margin-left: 5px; margin-right: 5px"/> 
@@ -135,8 +142,9 @@
                 if ($configs['page_list'] > 0 && $count > $configs['page_list']) {
                     $pages['total'] = ceil($count / $configs['page_list']);
 
-                    if ($pages['total'] <= 0 || $pages['current'] > $pages['total'])
+                    if ($pages['total'] <= 0 || $pages['current'] > $pages['total']) {
                         goURL('index.php?dir=' . $dirEncode . ($pages['total'] <= 0 ? null : '&page_list=' . $pages['total']));
+                    }
 
                     $start = ($pages['current'] * $configs['page_list']) - $configs['page_list'];
                     $end = $start + $configs['page_list'] >= $count ? $count : $start + $configs['page_list'];
@@ -151,12 +159,12 @@
                         echo '<li class="folder">
                             <div>
                                 <input type="checkbox" name="entry[]" value="' . $name . '"/>
-                                <a href="folder_edit.php?dir=' . $dirEncode .'&name=' . $name . $pages['paramater_1'] . '">
+                                <a href="folder_edit.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '">
                                     <img src="icon/folder.png"/>
                                 </a>
                                 <a href="index.php?dir=' . rawurlencode($path) . '">' . $name . '</a>
                                 <div class="perms">
-                                    <a href="folder_chmod.php?dir=' . $dirEncode .'&name=' . $name . $pages['paramater_1'] . '" class="chmod">' . $perms . '</a>
+                                    <a href="folder_chmod.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '" class="chmod">' . $perms . '</a>
                                 </div>
                             </div>
                         </li>';
@@ -168,35 +176,36 @@
 
                         if (in_array($type, $formats['other'])) {
                             $icon = $type;
-                        } else if (in_array($type, $formats['text'])) {
+                        } elseif (in_array($type, $formats['text'])) {
                             $icon = $type;
                             $isEdit = true;
-                        } else if (in_array($type, $formats['archive'])) {
+                        } elseif (in_array($type, $formats['archive'])) {
                             $icon = $type;
-                        } else if (in_array($type, $formats['audio'])) {
+                        } elseif (in_array($type, $formats['audio'])) {
                             $icon = $type;
-                        } else if (in_array($type, $formats['font'])) {
+                        } elseif (in_array($type, $formats['font'])) {
                             $icon = $type;
-                        } else if (in_array($type, $formats['binary'])) {
+                        } elseif (in_array($type, $formats['binary'])) {
                             $icon = $type;
-                        } else if (in_array($type, $formats['document'])) {
+                        } elseif (in_array($type, $formats['document'])) {
                             $icon = $type;
-                        } else if (in_array($type, $formats['image'])) {
+                        } elseif (in_array($type, $formats['image'])) {
                             $icon = 'image';
-                        } else if (in_array(strtolower(strpos($name, '.') !== false ? substr($name, 0, strpos($name, '.')) : $name), $formats['source'])) {
+                        } elseif (in_array(strtolower(strpos($name, '.') !== false ? substr($name, 0, strpos($name, '.')) : $name), $formats['source'])) {
                             $icon = strtolower(strpos($name, '.') !== false ? substr($name, 0, strpos($name, '.')) : $name);
                             $isEdit = true;
-                        } else if (isFormatUnknown($name)) {
+                        } elseif (isFormatUnknown($name)) {
                             $icon = 'unknown';
                             $isEdit = true;
                         }
 
-                        if (strtolower($name) == 'error_log' || $isEdit)
+                        if (strtolower($name) == 'error_log' || $isEdit) {
                             $edit[0] = '<a href="edit_text.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '">';
-                        else if (in_array($type, $formats['zip']))
+                        } elseif (in_array($type, $formats['zip'])) {
                             $edit[0] = '<a href="file_unzip.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '">';
-                        else
+                        } else {
                             $edit[0] = '<a href="file_rename.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '">';
+                        }
 
                         echo '<li class="file">
                             <p>
@@ -206,7 +215,7 @@
                             </p>
                             <p>
                                 <span class="size">' . size(filesize($dir . '/' . $name)) . '</span>,
-                                <a href="file_chmod.php?dir=' . $dirEncode .'&name=' . $name . $pages['paramater_1'] . '" class="chmod">' . $perms . '</a>
+                                <a href="file_chmod.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '" class="chmod">' . $perms . '</a>
                             </p>
                         </li>';
                     }
@@ -214,8 +223,9 @@
 
                 echo '<li class="normal"><input type="checkbox" name="all" value="1" onClick="javascript:onCheckItem();"/> <strong class="form_checkbox_all">Chọn tất cả</strong></li>';
 
-                if ($configs['page_list'] > 0 && $pages['total'] > 1)
+                if ($configs['page_list'] > 0 && $pages['total'] > 1) {
                     echo '<li class="normal">' . page($pages['current'], $pages['total'], array(PAGE_URL_DEFAULT => 'index.php?dir=' . $dirEncode, PAGE_URL_START => 'index.php?dir=' . $dirEncode . '&page_list=')) . '</li>';
+                }
             }
 
             echo '</ul>';
@@ -247,5 +257,3 @@
     } else {
         goURL('login.php');
     }
-
-?>

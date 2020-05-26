@@ -1,4 +1,6 @@
-<?php define('ACCESS', true);
+<?php
+
+define('ACCESS', true);
 
     include_once 'function.php';
 
@@ -21,18 +23,19 @@
             if (isset($_POST['submit'])) {
                 echo '<div class="notice_failure">';
 
-                if (empty($_POST['name']) || empty($_POST['path']))
+                if (empty($_POST['name']) || empty($_POST['path'])) {
                     echo 'Chưa nhập đầy đủ thông tin';
-                else if (isset($_POST['is_delete']) && processDirectory($_POST['path']) == $dir . '/' . $name)
+                } elseif (isset($_POST['is_delete']) && processDirectory($_POST['path']) == $dir . '/' . $name) {
                     echo 'Nếu chọn xóa thư mục bạn không thể lưu tập tin nén ở đó';
-                else if (isPathNotPermission(processDirectory($_POST['path'])))
+                } elseif (isPathNotPermission(processDirectory($_POST['path']))) {
                     echo 'Bạn không thể nén tập tin zip tới đường dẫn của File Manager';
-                else if (isNameError($_POST['name']))
+                } elseif (isNameError($_POST['name'])) {
                     echo 'Tên tập tin zip không hợp lệ';
-                else if (!zipdir($dir . '/' . $name, processDirectory($_POST['path'] . '/' . processName($_POST['name'])), isset($_POST['is_delete']) == 1))
+                } elseif (!zipdir($dir . '/' . $name, processDirectory($_POST['path'] . '/' . processName($_POST['name'])), isset($_POST['is_delete']) == 1)) {
                     echo 'Nén zip thư mục thất bại';
-                else
+                } else {
                     goURL('index.php?dir=' . $dirEncode . $pages['paramater_1']);
+                }
 
                 echo '</div>';
             }
@@ -63,5 +66,3 @@
     } else {
         goURL('login.php');
     }
-
-?>

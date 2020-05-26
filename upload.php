@@ -1,4 +1,6 @@
-<?php define('ACCESS', true);
+<?php
+
+define('ACCESS', true);
 
     include_once 'function.php';
 
@@ -21,7 +23,7 @@
             if (isset($_POST['submit'])) {
                 $isEmpty = true;
 
-                foreach ($_FILES['file']['name'] AS $entry) {
+                foreach ($_FILES['file']['name'] as $entry) {
                     if (!empty($entry)) {
                         $isEmpty = false;
                         break;
@@ -36,10 +38,11 @@
                             if ($_FILES['file']['error'] == UPLOAD_ERR_INI_SIZE) {
                                 echo '<div class="notice_failure">Tập tin <strong class="file_name_upload">' . $_FILES['file']['name'][$i] . '</strong> vượt quá kích thước cho phép</div>';
                             } else {
-                                if (copy($_FILES['file']['tmp_name'][$i], $dir . '/' . str_replace(array('_jar', '.jar1', '.jar2'), '.jar', $_FILES['file']['name'][$i])))
+                                if (copy($_FILES['file']['tmp_name'][$i], $dir . '/' . str_replace(array('_jar', '.jar1', '.jar2'), '.jar', $_FILES['file']['name'][$i]))) {
                                     echo '<div class="notice_succeed">Tải lên tập tin <strong class="file_name_upload">' . $_FILES['file']['name'][$i] . '</strong>, <span class="file_size_upload">' . size($_FILES['file']['size'][$i]) . '</span> thành công</div>';
-                                else
+                                } else {
                                     echo '<div class="notice_failure">Tải lên tập tin <strong class="file_name_upload">' . $_FILES['file']['name'][$i] . '</strong> thất bại</div>';
+                                }
                             }
                         }
                     }
@@ -74,5 +77,3 @@
     } else {
         goURL('login.php');
     }
-
-?>

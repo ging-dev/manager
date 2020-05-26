@@ -44,11 +44,11 @@
 
                 if ($collection != MYSQL_COLLECTION_NONE && !preg_match('#^(.+?)' . MYSQL_COLLECTION_SPLIT . '(.+?)$#i', $collection, $matches)) {
                     $notice .= 'Mã hóa - Đối chiếu không hợp lệ';
-                } else if (empty($table)) {
+                } elseif (empty($table)) {
                     $notice .= 'Chưa nhập tên bảng';
-                } else if (empty($column)) {
+                } elseif (empty($column)) {
                     $notice .= 'Chưa nhập tên cột';
-                } else if (!empty($length) && !preg_match('#\\b[0-9]+\\b#', $length)) {
+                } elseif (!empty($length) && !preg_match('#\\b[0-9]+\\b#', $length)) {
                     $notice .= 'Độ dài không hợp lệ';
                 } else {
                     $type_put = $type . (empty($length) == false ? "($length)" : null);
@@ -63,32 +63,39 @@
                     $sql .= "(`$column` ";
                     $sql .= $type_put;
 
-                    if ($attributes_put != null)
+                    if ($attributes_put != null) {
                         $sql .= ' ' . $attributes_put;
+                    }
 
                     $sql .= ' ' . $null_put;
 
-                    if ($default_put != null)
+                    if ($default_put != null) {
                         $sql .= ' ' . $default_put;
+                    }
 
-                    if ($auto_increment_put != null)
+                    if ($auto_increment_put != null) {
                         $sql .= ' ' . $auto_increment_put;
+                    }
 
-                    if ($field_key_put != null)
+                    if ($field_key_put != null) {
                         $sql .= $field_key_put;
+                    }
 
                     $sql .= ') ENGINE=' . $engine_storage;
 
-                    if ($collection_put != null)
+                    if ($collection_put != null) {
                         $sql .= ' ' . $collection_put;
+                    }
 
-                    if ($auto_increment_put != null)
+                    if ($auto_increment_put != null) {
                         $sql .= ' ' . $auto_increment_put . '=1';
+                    }
 
-                    if (!@mysqli_query($conn, $sql))
+                    if (!@mysqli_query($conn, $sql)) {
                         $notice .= 'Lỗi tạo bảng: ' . mysqli_error($conn);
-                    else
+                    } else {
                         goURL('database_tables.php' . DATABASE_NAME_PARAMATER_0);
+                    }
                 }
 
                 $collection = $collection != MYSQL_COLLECTION_NONE && isset($matches) ? $matches[2] : MYSQL_COLLECTION_NONE;
@@ -127,11 +134,12 @@
             <ul class="list">
                 <li><img src="icon/database_table.png"/> <a href="database_tables.php' . DATABASE_NAME_PARAMATER_0 . '">Danh sách bảng</a></li>';
 
-                if (IS_DATABASE_ROOT)
-                    echo '<li><img src="icon/database.png"/> <a href="database_lists.php">Danh sách database</a></li>';
+            if (IS_DATABASE_ROOT) {
+                echo '<li><img src="icon/database.png"/> <a href="database_lists.php">Danh sách database</a></li>';
+            }
 
             echo '</ul>';
-        } else if (ERROR_CONNECT == false && ERROR_SELECT_DB && IS_DATABASE_ROOT) {
+        } elseif (ERROR_CONNECT == false && ERROR_SELECT_DB && IS_DATABASE_ROOT) {
             include_once 'header.php';
 
             echo '<div class="title">' . $title . '</div>
@@ -157,5 +165,3 @@
     }
 
     include_once 'database_close.php';
-
-?>
