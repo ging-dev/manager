@@ -1,4 +1,6 @@
-<?php define('ACCESS', true);
+<?php
+
+define('ACCESS', true);
 
     include_once 'function.php';
 
@@ -17,7 +19,7 @@
             <ul class="list">
                 <li><img src="icon/list.png"/> <a href="index.php' . $pages['paramater_0'] . '">Danh sách</a></li>
             </ul>';
-        } else if (!isFormatText($name) && !isFormatUnknown($name)) {
+        } elseif (!isFormatText($name) && !isFormatUnknown($name)) {
             echo '<div class="list"><span>Tập tin này không phải dạng văn bản</span></div>
             <div class="title">Chức năng</div>
             <ul class="list">
@@ -46,15 +48,19 @@
                             $end = $index + $configs['page_file_edit'] <= $count ? $index + $configs['page_file_edit'] : $count;
                             $content = null;
 
-                            if ($index > 0)
-                                for ($i = 0; $i < $index; ++$i)
+                            if ($index > 0) {
+                                for ($i = 0; $i < $index; ++$i) {
                                     $content .= $ex[$i] . "\n";
+                                }
+                            }
 
                             $content .= str_replace("\r", "\n", str_replace("\r\n", "\n", $_POST['content']));
 
-                            if ($page < ceil($count / $configs['page_file_edit']))
-                                for ($i = $end; $i < $count; ++$i)
+                            if ($page < ceil($count / $configs['page_file_edit'])) {
+                                for ($i = $end; $i < $count; ++$i) {
                                     $content .= "\n" . $ex[$i];
+                                }
+                            }
                         } else {
                             $content = $_POST['content'];
                         }
@@ -87,10 +93,11 @@
                         $end = $index + $configs['page_file_edit'] <= $count ? $index + $configs['page_file_edit'] : $count;
 
                         for ($i = $index; $i < $end; ++$i) {
-                            if ($i >= $end - 1)
+                            if ($i >= $end - 1) {
                                 $content .= $ex[$i];
-                            else
+                            } else {
                                 $content .= $ex[$i] . "\n";
+                            }
                         }
                     }
                 }
@@ -102,12 +109,13 @@
             if ($isExecute && isset($_POST['s_check_syntax'])) {
                 @exec(getPathPHP() . ' -c -f -l ' . $path, $output, $value);
 
-                if ($value == -1)
+                if ($value == -1) {
                     $error_syntax = 'Không thể kiểm tra lỗi';
-                else if ($value == 255 || count($output) == 3)
+                } elseif ($value == 255 || count($output) == 3) {
                     $error_syntax = $output[1];
-                else
+                } else {
                     $error_syntax = 'Không có lỗi';
+                }
             }
 
             echo $notice;
@@ -143,8 +151,9 @@
                     </div>
                 </form>';
 
-                if ($pageLine > 0 && $total > 1)
-                    echo page($page, $total, array(PAGE_URL_DEFAULT => 'edit_text.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'], PAGE_URL_START => 'edit_text.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&page='));
+            if ($pageLine > 0 && $total > 1) {
+                echo page($page, $total, array(PAGE_URL_DEFAULT => 'edit_text.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'], PAGE_URL_START => 'edit_text.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&page='));
+            }
 
             echo '</div>
             <div class="title">Chức năng</div>
@@ -165,5 +174,3 @@
     } else {
         goURL('login.php');
     }
-
-?>

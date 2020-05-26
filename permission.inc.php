@@ -1,7 +1,8 @@
 <?php
 
-    if (!defined('ACCESS'))
+    if (!defined('ACCESS')) {
         die('Not access');
+    }
 
     $script = function_exists('getenv') ? getenv('SCRIPT_NAME') : $_SERVER['SCRIPT_NAME'];
     $script = strpos($script, '/') !== false ? dirname($script) : null;
@@ -20,23 +21,26 @@
 
         ($script != '.' && $script != '/' && isPathNotPermission(processDirectory($dir))) ||
         ($script != '.' && $script !='/' && $name != null &&isPathNotPermission(processDirectory($dir . '/' . $name)))
-    )
+    ) {
         define('NOT_PERMISSION', true);
-    else
+    } else {
         define('NOT_PERMISSION', false);
+    }
 
-    if (!defined('INDEX') && !defined('LOGIN') && NOT_PERMISSION)
+    if (!defined('INDEX') && !defined('LOGIN') && NOT_PERMISSION) {
         goURL('index.php?not');
+    }
 
     if (NOT_PERMISSION) {
         $dir = null;
         $dirEncode = null;
     }
 
-    if ($dir != null)
+    if ($dir != null) {
         define('IS_ACCESS_PARENT_PATH_FILE_MANAGER', strtolower(processDirectory($dir)) == strtolower(processDirectory(PARENT_PATH_FILE_MANAGER)));
-    else
+    } else {
         define('IS_ACCESS_PARENT_PATH_FILE_MANAGER', strtolower(processDirectory(PARENT_PATH_FILE_MANAGER)) == strtolower(processDirectory($_SERVER['DOCUMENT_ROOT'])));
+    }
 
     function isPathNotPermission($path, $isUseName = false)
     {
@@ -46,12 +50,13 @@
             $path = str_replace('\\', '/', $path);
             $path = strtolower($path);
 
-            if (preg_match('#^' . $reg . '$#si', $path))
+            if (preg_match('#^' . $reg . '$#si', $path)) {
                 return true;
-            else if (preg_match('#^' . $reg . '/(^\/+|^\\+)(.*?)$#si', $path))
+            } elseif (preg_match('#^' . $reg . '/(^\/+|^\\+)(.*?)$#si', $path)) {
                 return true;
-            else if (preg_match('#^' . $reg . '/(.*?)$#si', $path))
+            } elseif (preg_match('#^' . $reg . '/(.*?)$#si', $path)) {
                 return true;
+            }
 
             return false;
         }
@@ -60,5 +65,3 @@
     }
 
     unset($script);
-
-?>

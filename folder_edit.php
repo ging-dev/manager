@@ -1,4 +1,6 @@
-<?php define('ACCESS', true);
+<?php
+
+define('ACCESS', true);
 
     include_once 'function.php';
 
@@ -21,14 +23,15 @@
             if (isset($_POST['submit'])) {
                 echo '<div class="notice_failure">';
 
-                if (empty($_POST['name']))
+                if (empty($_POST['name'])) {
                     echo 'Chưa nhập đầy đủ thông tin';
-                else if (isNameError($_POST['name']))
+                } elseif (isNameError($_POST['name'])) {
                     echo 'Tên tập tin không hợp lệ';
-                else if (!@rename($dir . '/' . $name, $dir . '/' . $_POST['name']))
+                } elseif (!@rename($dir . '/' . $name, $dir . '/' . $_POST['name'])) {
                     echo 'Đổi tên thư mục thất bại';
-                else
+                } else {
                     goURL('index.php?dir=' . $dirEncode . $pages['paramater_1']);
+                }
 
                 echo '</div>';
             }
@@ -56,5 +59,3 @@
     } else {
         goURL('login.php');
     }
-
-?>

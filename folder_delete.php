@@ -1,4 +1,6 @@
-<?php define('ACCESS', true);
+<?php
+
+define('ACCESS', true);
 
     include_once 'function.php';
 
@@ -19,11 +21,12 @@
             $dir = processDirectory($dir);
 
             if (isset($_POST['accept'])) {
-                if (!rrmdir($dir . '/' . $name))
+                if (!rrmdir($dir . '/' . $name)) {
                     echo '<div class="notice_failure">Xóa thư mục thất bại</div>';
-                else
+                } else {
                     goURL('index.php?dir=' . $dirEncode . $pages['paramater_1']);
-            } else if (isset($_POST['not_accept'])) {
+                }
+            } elseif (isset($_POST['not_accept'])) {
                 goURL('index.php?dir=' . $dirEncode . $pages['paramater_1']);
             }
 
@@ -51,5 +54,3 @@
     } else {
         goURL('login.php');
     }
-
-?>

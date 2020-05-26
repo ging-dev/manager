@@ -19,10 +19,11 @@
                     <div class="title">Chức năng</div>
                     <ul class="list">';
 
-                    if (IS_DATABASE_ROOT)
+                    if (IS_DATABASE_ROOT) {
                         echo '<li><img src="icon/database.png"/> <a href="database_lists.php">Danh sách database</a></li>';
-                    else
+                    } else {
                         echo '<li><img src="icon/database.png"/> <a href="database_tables.php">Danh sách bảng</a></li>';
+                    }
 
                     echo '</ul>';
                 } else {
@@ -46,5 +47,3 @@
     }
 
     include_once 'database_close.php';
-
-?>

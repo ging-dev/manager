@@ -1,4 +1,6 @@
-<?php define('ACCESS', true);
+<?php
+
+define('ACCESS', true);
 
     include_once 'function.php';
 
@@ -21,12 +23,13 @@
             if (isset($_POST['submit'])) {
                 echo '<div class="notice_failure">';
 
-                if (empty($_POST['mode']))
+                if (empty($_POST['mode'])) {
                     echo 'Chưa nhập đầy đủ thông tin';
-                else if (!@chmod($dir . '/' . $name, intval($_POST['mode'], 8)))
+                } elseif (!@chmod($dir . '/' . $name, intval($_POST['mode'], 8))) {
                     echo 'Chmod thư mục thất bại';
-                else
+                } else {
                     goURL('index.php?dir=' . $dirEncode . $pages['paramater_1']);
+                }
 
                 echo '</div>';
             }
@@ -54,5 +57,3 @@
     } else {
         goURL('login.php');
     }
-
-?>

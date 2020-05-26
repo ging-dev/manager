@@ -1,4 +1,6 @@
-<?php define('ACCESS', true);
+<?php
+
+define('ACCESS', true);
 
     include_once 'function.php';
 
@@ -32,15 +34,15 @@
 
             if (empty($username)) {
                 echo '<div class="notice_failure">Chưa nhập tên đăng nhập</div>';
-            } else if (strlen($username) < 3) {
+            } elseif (strlen($username) < 3) {
                 echo '<div class="notice_failure">Tên đăng nhập phải lớn hơn 3 ký tự</div>';
-            } else if (!empty($passwordO) && getPasswordEncode($passwordO) != $configs['password']) {
+            } elseif (!empty($passwordO) && getPasswordEncode($passwordO) != $configs['password']) {
                 echo '<div class="notice_failure">Mật khẩu cũ không đúng</div>';
-            } else if (!empty($passwordO) && (empty($passwordN) || empty($verifyN))) {
+            } elseif (!empty($passwordO) && (empty($passwordN) || empty($verifyN))) {
                 echo '<div class="notice_failure">Để thay đổi mật khẩu hãy nhập đủ hai mật khẩu</div>';
-            } else if (!empty($passwordO) && $passwordN != $verifyN) {
+            } elseif (!empty($passwordO) && $passwordN != $verifyN) {
                 echo '<div class="notice_failure">Hai mật khẩu không giống nhau</div>';
-            } else if (!empty($passwordO) && strlen($passwordN) < 5) {
+            } elseif (!empty($passwordO) && strlen($passwordN) < 5) {
                 echo '<div class="notice_failure">Mật khẩu phải lớn hơn 5 ký tự</div>';
             } else {
                 if (createConfig($username, (!empty($passwordN) ? getPasswordEncode($passwordN) : $configs['password']), $pageList, $pageFileEdit, $pageFileEditLine, $pageDatabaseListRows, false)) {
@@ -88,10 +90,11 @@
         <div class="title">Chức năng</div>
         <ul class="list">';
 
-        if ($ref != null)
+        if ($ref != null) {
             echo '<li><img src="icon/back.png"/> <a href="' . $ref . '">Quay lại</a></li>';
-        else
+        } else {
             echo '<li><img src="icon/list.png"/> <a href="index.php">Danh sách</a></li>';
+        }
 
         echo '</ul>';
 
@@ -99,5 +102,3 @@
     } else {
         goURL('login.php');
     }
-
-?>

@@ -1,4 +1,6 @@
-<?php define('ACCESS', true);
+<?php
+
+define('ACCESS', true);
 
     include_once 'function.php';
 
@@ -18,7 +20,7 @@
             <ul class="list">
                 <li><img src="icon/list.png"/> <a href="index.php' . $pages['paramater_0'] . '">Danh sách</a></li>
             </ul>';
-        } else if (!isFormatText($name) && !isFormatUnknown($name)) {
+        } elseif (!isFormatText($name) && !isFormatUnknown($name)) {
             echo '<div class="list"><span>Tập tin này không phải dạng văn bản</span></div>
             <div class="title">Chức năng</div>
             <ul class="list">
@@ -35,10 +37,11 @@
                     $content = str_replace("\r\n", "\n", $content);
                     $content = str_replace("\r", "\n", $content);
 
-                    if (strpos($content, "\n") !== false)
+                    if (strpos($content, "\n") !== false) {
                         $lines = explode("\n", $content);
-                    else
+                    } else {
                         $lines[] = $content;
+                    }
                 } else {
                     $lines[] = $content;
                 }
@@ -71,15 +74,17 @@
 
                 if ($count > 1) {
                     if ($line > 0) {
-                        for ($i = 0; $i < $line; ++$i)
+                        for ($i = 0; $i < $line; ++$i) {
                             $data .= $lines[$i] . "\n";
+                        }
                     }
 
                     $data .= $con;
 
                     if ($line < $count - 1) {
-                        for ($i = ($line + 1); $i < $count; ++$i)
+                        for ($i = ($line + 1); $i < $count; ++$i) {
                             $data .= "\n" . $lines[$i];
+                        }
                     }
                 } else {
                     $data = $con;
@@ -88,8 +93,9 @@
                 if (file_put_contents($path, $data)) {
                     $notice = '<div class="notice_succeed">Lưu lại thành công</div>';
 
-                    if (isset($_POST['save']))
+                    if (isset($_POST['save'])) {
                         goURL('edit_text_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . $page['paramater_1'] . '#line_number_' . $line);
+                    }
                 } else {
                     $notice = '<div class="notice_failure">Lưu lại thất bại</div>';
                 }
@@ -108,11 +114,13 @@
                 }
             }
 
-            if ($line < 0)
-                goURL('edit_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line=0'  . $page['paramater_1']);
+            if ($line < 0) {
+                goURL('edit_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line=0' . $page['paramater_1']);
+            }
 
-            if ($line > $count - 1)
-                goURL('edit_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line='  . ($count - 1) . $page['paramater_1']);
+            if ($line > $count - 1) {
+                goURL('edit_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line=' . ($count - 1) . $page['paramater_1']);
+            }
 
             $page['current'] = $line + 1 > $configs['page_file_edit_line'] ? @ceil(($line + 1) / $configs['page_file_edit_line']) : 1;
 
@@ -121,8 +129,9 @@
                 $page['paramater_1'] = '&page=' . $page['current'];
             }
 
-            if ($isGO)
+            if ($isGO) {
                 goURL('edit_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line=' . $line . $page['paramater_1']);
+            }
 
             $url = array('action' => null, 'prev' => null, 'next' => null);
             $url['action'] = 'edit_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line=' . $line . $page['paramater_1'] . '#line_label';
@@ -185,5 +194,3 @@
     }
 
     include_once 'footer.php';
-
-?>

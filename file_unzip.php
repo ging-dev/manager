@@ -1,4 +1,6 @@
-<?php define('ACCESS', true);
+<?php
+
+define('ACCESS', true);
 
     include_once 'function.php';
 
@@ -16,7 +18,7 @@
             <ul class="list">
                 <li><img src="icon/list.png"/> <a href="index.php' . $pages['paramater_0'] . '">Danh sách</a></li>
             </ul>';
-        } else if (!in_array($format, array('zip', 'jar'))) {
+        } elseif (!in_array($format, array('zip', 'jar'))) {
             echo '<div class="list"><span>Tập tin không phải zip</span></div>
             <div class="title">Chức năng</div>
             <ul class="list">
@@ -31,9 +33,9 @@
 
                 if (empty($_POST['path'])) {
                     echo 'Chưa nhập đầy đủ thông tin';
-                } else if (!is_dir(processDirectory($_POST['path']))) {
+                } elseif (!is_dir(processDirectory($_POST['path']))) {
                     echo 'Đường dẫn giải nén không tồn tại';
-                } else if (isPathNotPermission(processDirectory($_POST['path']))) {
+                } elseif (isPathNotPermission(processDirectory($_POST['path']))) {
                     echo 'Bạn không thể giải nén tập tin zip tới đường dẫn của File Manager';
                 } else {
                     include 'pclzip.class.php';
@@ -46,8 +48,9 @@
                     }
 
                     if ($zip->extract(PCLZIP_OPT_PATH, processDirectory($_POST['path']), PCLZIP_CB_PRE_EXTRACT, 'callback_pre_extract') != false) {
-                        if (isset($_POST['is_delete']))
+                        if (isset($_POST['is_delete'])) {
                             @unlink($dir . '/' . $name);
+                        }
 
                         goURL('index.php?dir=' . $dirEncode . $pages['paramater_1']);
                     } else {
@@ -85,5 +88,3 @@
     } else {
         goURL('login.php');
     }
-
-?>

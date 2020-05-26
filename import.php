@@ -1,4 +1,6 @@
-<?php define('ACCESS', true);
+<?php
+
+define('ACCESS', true);
 
     include_once 'function.php';
 
@@ -21,7 +23,7 @@
             if (isset($_POST['submit'])) {
                 $isEmpty = true;
 
-                foreach ($_POST['url'] AS $entry) {
+                foreach ($_POST['url'] as $entry) {
                     if (!empty($entry)) {
                         $isEmpty = false;
                         break;
@@ -35,12 +37,13 @@
                         if (!empty($_POST['url'][$i])) {
                             $_POST['url'][$i] = processImport($_POST['url'][$i]);
 
-                            if (!isURL($_POST['url'][$i]))
+                            if (!isURL($_POST['url'][$i])) {
                                 echo '<div class="notice_failure">URL <strong class="url_import">' . $_POST['url'][$i] . '</strong> không hợp lệ</div>';
-                            else if (import($_POST['url'][$i], $dir . '/' . basename($_POST['url'][$i])))
+                            } elseif (import($_POST['url'][$i], $dir . '/' . basename($_POST['url'][$i]))) {
                                 echo '<div class="notice_succeed">Nhập khẩu tập tin <strong class="file_name_import">' . basename($_POST['url'][$i]) . '</strong>, <span class="file_size_import">' . size(filesize($dir . '/' . basename($_POST['url'][$i]))) . '</span> thành công</div>';
-                            else
+                            } else {
                                 echo '<div class="notice_failure">Nhập khẩu tập tin <strong class="file_name_import">' . basename($_POST['url'][$i]) . '</strong> thất bại</div>';
+                            }
                         }
                     }
                 }
@@ -77,5 +80,3 @@
     } else {
         goURL('login.php');
     }
-
-?>

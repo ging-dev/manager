@@ -1,4 +1,6 @@
-<?php if (!defined('ACCESS')) die('Not access'); ?>
+<?php if (!defined('ACCESS')) {
+    die('Not access');
+} ?>
 
         </div>
         <div id="footer">

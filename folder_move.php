@@ -1,4 +1,6 @@
-<?php define('ACCESS', true);
+<?php
+
+define('ACCESS', true);
 
     include_once 'function.php';
 
@@ -21,20 +23,21 @@
             if (isset($_POST['submit'])) {
                 echo '<div class="notice_failure">';
 
-                if (empty($_POST['path']))
+                if (empty($_POST['path'])) {
                     echo 'Chưa nhập đầy đủ thông tin';
-                else if ($dir == processDirectory($_POST['path']))
+                } elseif ($dir == processDirectory($_POST['path'])) {
                     echo 'Đường dẫn mới phải khác đường dẫn hiện tại';
-                else if (!is_dir($_POST['path']))
+                } elseif (!is_dir($_POST['path'])) {
                     echo 'Đường dẫn mới không tồn tại';
-                else if (isPathNotPermission(processDirectory($_POST['path'])))
+                } elseif (isPathNotPermission(processDirectory($_POST['path']))) {
                     echo 'Bạn không thể di chuyển thư mục tới đường dẫn của File Manager';
-                else if (isPathNotPermission(processDirectory($_POST['path'] . '/' . $name)))
+                } elseif (isPathNotPermission(processDirectory($_POST['path'] . '/' . $name))) {
                     echo 'Bạn không thể di chuyển thư mục giống tên tới thư mục chứa thư mục của File Manager';
-                else if (!movedir($dir . '/' . $name, processDirectory($_POST['path'])))
+                } elseif (!movedir($dir . '/' . $name, processDirectory($_POST['path']))) {
                     echo 'Di chuyển thư mục thất bại';
-                else
+                } else {
                     goURL('index.php?dir=' . $dirEncode . $pages['paramater_1']);
+                }
 
                 echo '</div>';
             }
@@ -62,5 +65,3 @@
     } else {
         goURL('login.php');
     }
-
-?>
