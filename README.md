@@ -1,8 +1,8 @@
 # Manager
-Manager is Filesystem management, integrated mysqli database management. Use on your website directly.
+Manager is Filesystem management, integrated mysql database management. Use on your website directly.
 ## Author
 - **Izero**
-- **Itachi**
+- **Gingdev**
 
 ## Usage
 - Just upload to your website
