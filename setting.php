@@ -6,7 +6,7 @@ define('ACCESS', true);
 
     if (IS_LOGIN) {
         $title = 'Cài đặt';
-        $ref = $_POST['ref'] ?? (isset($_SERVER['HTTP_REFFRER']) ? $_SERVER['HTTP_REFERER']: null);
+        $ref = $_POST['ref'] ?? (isset($_SERVER['HTTP_REFFRER']) ? $_SERVER['HTTP_REFERER'] : null);
         $ref = $ref != $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ? $ref : null;
 
         include_once 'header.php';

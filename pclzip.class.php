@@ -858,7 +858,7 @@
                         $v_result_list[$p_options_list[$i]] = PclZipUtilTranslateWinPath($p_options_list[$i+1], false);
                         $i++;
                     } else {
-          }
+                    }
         break;
 
                 case PCLZIP_OPT_BY_NAME:
@@ -871,17 +871,18 @@
                     if (is_string($p_options_list[$i+1])) {
                         $v_result_list[$p_options_list[$i]][0] = $p_options_list[$i+1];
                     } elseif (is_array($p_options_list[$i+1])) {
-              $v_result_list[$p_options_list[$i]] = $p_options_list[$i+1];
-          } else {
-              PclZip::privErrorLog(PCLZIP_ERR_INVALID_OPTION_VALUE, "Wrong parameter value for option '" . PclZipUtilOptionText($p_options_list[$i]) . "'");
+                        $v_result_list[$p_options_list[$i]] = $p_options_list[$i+1];
+                    } else {
+                        PclZip::privErrorLog(PCLZIP_ERR_INVALID_OPTION_VALUE, "Wrong parameter value for option '" . PclZipUtilOptionText($p_options_list[$i]) . "'");
 
-              return PclZip::errorCode();
-          }
+                        return PclZip::errorCode();
+                    }
           $i++;
         break;
 
                 case PCLZIP_OPT_BY_EREG:
                               $p_options_list[$i] = PCLZIP_OPT_BY_PREG;
+                              // no break
         case PCLZIP_OPT_BY_PREG:
                             if (($i+1) >= $p_size) {
                                 PclZip::privErrorLog(PCLZIP_ERR_MISSING_OPTION_VALUE, "Missing parameter value for option '" . PclZipUtilOptionText($p_options_list[$i]) . "'");
@@ -892,10 +893,10 @@
                     if (is_string($p_options_list[$i+1])) {
                         $v_result_list[$p_options_list[$i]] = $p_options_list[$i+1];
                     } else {
-              PclZip::privErrorLog(PCLZIP_ERR_INVALID_OPTION_VALUE, "Wrong parameter value for option '" . PclZipUtilOptionText($p_options_list[$i]) . "'");
+                        PclZip::privErrorLog(PCLZIP_ERR_INVALID_OPTION_VALUE, "Wrong parameter value for option '" . PclZipUtilOptionText($p_options_list[$i]) . "'");
 
-              return PclZip::errorCode();
-          }
+                        return PclZip::errorCode();
+                    }
           $i++;
         break;
 
@@ -916,15 +917,15 @@
                     if (is_string($p_options_list[$i+1])) {
                         $v_result_list[$p_options_list[$i]] = $p_options_list[$i+1];
                     } else {
-              PclZip::privErrorLog(
-                  PCLZIP_ERR_INVALID_OPTION_VALUE,
-                  "Wrong parameter value for option '"
+                        PclZip::privErrorLog(
+                            PCLZIP_ERR_INVALID_OPTION_VALUE,
+                            "Wrong parameter value for option '"
                                  . PclZipUtilOptionText($p_options_list[$i])
                                  . "'"
-              );
+                        );
 
-              return PclZip::errorCode();
-          }
+                        return PclZip::errorCode();
+                    }
           $i++;
         break;
 
@@ -3420,7 +3421,7 @@
                               if ($v_skip > 0) {
                                   $v_skip--;
                               } else {
-                                  $v_result = $v_list[$i] . ($i!=(sizeof($v_list)-1)?"/" . $v_result:"");
+                                  $v_result = $v_list[$i] . ($i!=(sizeof($v_list)-1) ? "/" . $v_result : "");
                               }
                           }
                       }
