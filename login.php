@@ -16,12 +16,12 @@
             $username = addslashes($_POST['username']);
             $password = addslashes($_POST['password']);
 
-            if ($username == null || $password == null) {
+            if (null == $username || null == $password) {
                 $notice .= 'Chưa nhập đầy đủ thông tin';
             } elseif (strtolower($username) != strtolower($configs['username']) || getPasswordEncode($password) != $configs['password']) {
                 $notice .= 'Sai tài khoản hoặc mật khẩu';
             } else {
-                setcookie('login', getPasswordEncode($password), time() + 3600*24*7);
+                setcookie('login', getPasswordEncode($password), time() + 3600 * 24 * 7);
 
                 goURL('index.php');
             }
@@ -36,25 +36,24 @@
             <div class="list">Bạn đang cài đặt File Manager trên thư mục gốc, hãy chuyển vào một thư mục. Bạn có thể đăng nhập nhưng tất cả các chức năng đều bị ẩn và chặn</div>';
         }
 
-        echo '<div class="title">' . $title . '</div>';
+        echo '<div class="title">'.$title.'</div>';
         echo $notice;
 
         if (IS_CONFIG_UPDATE || IS_CONFIG_ERROR) {
-            @unlink(REALPATH . '/' . PATH_CONFIG);
+            @unlink(REALPATH.'/'.PATH_CONFIG);
         }
 
         if (IS_CONFIG_UPDATE) {
             echo '<div class="notice_info">Cấu hình cập nhật sẽ đưa về mặc định</div>';
         } elseif (IS_CONFIG_ERROR) {
             echo '<div class="notice_failure">Cấu hình bị lỗi sẽ đưa về mặc định</div>';
-        } elseif (!is_file(REALPATH . '/' . PATH_CONFIG)) {
+        } elseif (!is_file(REALPATH.'/'.PATH_CONFIG)) {
             echo '<div class="notice_info">Cấu hình không tồn tại nó sẽ được tạo</div>';
         }
 
-
-        if (!is_file(REALPATH . '/' . PATH_CONFIG)) {
+        if (!is_file(REALPATH.'/'.PATH_CONFIG)) {
             if (createConfig()) {
-                echo '<div class="notice_info">Tài khoản: <strong>' . LOGIN_USERNAME_DEFAULT . '</strong>, Mật khẩu: <strong>' . LOGIN_PASSWORD_DEFAULT . '</strong></div>';
+                echo '<div class="notice_info">Tài khoản: <strong>'.LOGIN_USERNAME_DEFAULT.'</strong>, Mật khẩu: <strong>'.LOGIN_PASSWORD_DEFAULT.'</strong></div>';
             } else {
                 echo '<div class="notice_failure">Tạo cấu hình thất bại, hãy thử lại</div>';
             }

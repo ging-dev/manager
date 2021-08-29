@@ -6,25 +6,25 @@ define('ACCESS', true);
 
     if (IS_LOGIN) {
         $title = 'Xóa dòng';
-        $page = array('current' => 0, 'paramater_0' => null, 'paramater_1' => null);
+        $page = ['current' => 0, 'paramater_0' => null, 'paramater_1' => null];
         $page['current'] = isset($_GET['page']) ? intval($_GET['page']) : 1;
         $page['current'] = $page['current'] <= 0 ? 1 : $page['current'];
 
         include_once 'header.php';
 
-        echo '<div class="title">' . $title . '</div>';
+        echo '<div class="title">'.$title.'</div>';
 
-        if ($dir == null || $name == null || !is_file(processDirectory($dir . '/' . $name))) {
+        if (null == $dir || null == $name || !is_file(processDirectory($dir.'/'.$name))) {
             echo '<div class="list"><span>Đường dẫn không tồn tại</span></div>
             <div class="title">Chức năng</div>
             <ul class="list">
-                <li><img src="icon/list.png"/> <a href="index.php' . $pages['paramater_0'] . '">Danh sách</a></li>
+                <li><img src="icon/list.png"/> <a href="index.php'.$pages['paramater_0'].'">Danh sách</a></li>
             </ul>';
         } elseif (!isFormatText($name) && !isFormatUnknown($name)) {
             echo '<div class="list"><span>Tập tin này không phải dạng văn bản</span></div>
             <div class="title">Chức năng</div>
             <ul class="list">
-                <li><img src="icon/list.png"/> <a href="index.php?dir=' . $dirEncode . $pages['paramater_1'] . '">Danh sách</a></li>
+                <li><img src="icon/list.png"/> <a href="index.php?dir='.$dirEncode.$pages['paramater_1'].'">Danh sách</a></li>
             </ul>';
         } else {
             function process()
@@ -49,16 +49,16 @@ define('ACCESS', true);
                 $count = is_countable($lines) ? count($lines) : 0;
             }
 
-            $path = $dir . '/' . $name;
+            $path = $dir.'/'.$name;
             $line = isset($_GET['line']) ? intval($_GET['line']) : 0;
             $content = null;
             $notice = null;
-            $lines = array();
+            $lines = [];
             $count = 0;
 
             if ($page['current'] > 1) {
-                $page['paramater_0'] = '?page=' . $page['current'];
-                $page['paramater_1'] = '&page=' . $page['current'];
+                $page['paramater_0'] = '?page='.$page['current'];
+                $page['paramater_1'] = '&page='.$page['current'];
             }
 
             process();
@@ -69,13 +69,13 @@ define('ACCESS', true);
                 if ($count > 1) {
                     if ($line > 0) {
                         for ($i = 0; $i < $line; ++$i) {
-                            $data .= $lines[$i] . ($i < $line - 1 ? "\n" : null);
+                            $data .= $lines[$i].($i < $line - 1 ? "\n" : null);
                         }
                     }
 
                     if ($line < $count - 1) {
                         for ($i = ($line + 1); $i < $count; ++$i) {
-                            $data .= ($i > 1 || $line > 0 ? "\n" : null) . $lines[$i];
+                            $data .= ($i > 1 || $line > 0 ? "\n" : null).$lines[$i];
                         }
                     }
                 } else {
@@ -86,7 +86,7 @@ define('ACCESS', true);
                     $notice = '<div class="notice_succeed">Xóa thành công</div>';
 
                     if (isset($_POST['delete'])) {
-                        goURL('edit_text_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . $page['paramater_1'] . '#line_number_' . ($line > $count - 2 ? $count - 2 : $line));
+                        goURL('edit_text_line.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].$page['paramater_1'].'#line_number_'.($line > $count - 2 ? $count - 2 : $line));
                     }
                 } else {
                     $notice = '<div class="notice_failure">Xóa thất bại</div>';
@@ -107,57 +107,57 @@ define('ACCESS', true);
             }
 
             if ($line < 0) {
-                goURL('delete_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line=0' . $page['paramater_1']);
+                goURL('delete_line.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'&line=0'.$page['paramater_1']);
             }
 
             if ($line > $count - 1) {
-                goURL('delete_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line=' . ($count - 1) . $page['paramater_1']);
+                goURL('delete_line.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'&line='.($count - 1).$page['paramater_1']);
             }
 
             $page['current'] = $line + 1 > $configs['page_file_edit_line'] ? ceil(($line + 1) / $configs['page_file_edit_line']) : 1;
 
             if ($page['current'] > 1) {
-                $page['paramater_0'] = '?page=' . $page['current'];
-                $page['paramater_1'] = '&page=' . $page['current'];
+                $page['paramater_0'] = '?page='.$page['current'];
+                $page['paramater_1'] = '&page='.$page['current'];
             }
 
             if ($isGO) {
-                goURL('delete_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line=' . $line . $page['paramater_1']);
+                goURL('delete_line.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'&line='.$line.$page['paramater_1']);
             }
 
-            $url = array('action' => null, 'prev' => null, 'next' => null);
-            $url['action'] = 'delete_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line=' . $line . $page['paramater_1'] . '#line_label';
-            $url['prev'] = $line > 0 ? '<a href="delete_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line=' . ($line - 1) . ($configs['page_file_edit_line'] > 0 && $line <= $configs['page_file_edit_line'] ? null : '&page=' . ceil($line / $configs['page_file_edit_line'])) . '#line_label"><img src="icon/arrow_left.png"/></a>' : '<img src="icon/arrow_left.png"/>';
-            $url['next'] = $line < $count - 1 ? '<a href="delete_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line=' . ($line + 1) . ($configs['page_file_edit_line'] > 0 && $line <= $configs['page_file_edit_line'] ? null : '&page=' . ceil(($line + 2) / $configs['page_file_edit_line'])) . '#line_label"><img src="icon/arrow_right.png"/></a>' : '<img src="icon/arrow_right.png"/>';
+            $url = ['action' => null, 'prev' => null, 'next' => null];
+            $url['action'] = 'delete_line.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'&line='.$line.$page['paramater_1'].'#line_label';
+            $url['prev'] = $line > 0 ? '<a href="delete_line.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'&line='.($line - 1).($configs['page_file_edit_line'] > 0 && $line <= $configs['page_file_edit_line'] ? null : '&page='.ceil($line / $configs['page_file_edit_line'])).'#line_label"><img src="icon/arrow_left.png"/></a>' : '<img src="icon/arrow_left.png"/>';
+            $url['next'] = $line < $count - 1 ? '<a href="delete_line.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'&line='.($line + 1).($configs['page_file_edit_line'] > 0 && $line <= $configs['page_file_edit_line'] ? null : '&page='.ceil(($line + 2) / $configs['page_file_edit_line'])).'#line_label"><img src="icon/arrow_right.png"/></a>' : '<img src="icon/arrow_right.png"/>';
 
             echo $notice;
             echo '<div class="list">
-                <span class="bull">&bull;</span><span>' . printPath($dir, true) . '</span><hr/>
+                <span class="bull">&bull;</span><span>'.printPath($dir, true).'</span><hr/>
                 <div class="ellipsis break-word">
-                    <span class="bull">&bull;</span>Tập tin: <strong class="file_name_edit">' . $name . '</strong>
+                    <span class="bull">&bull;</span>Tập tin: <strong class="file_name_edit">'.$name.'</strong>
                 </div><hr/>
-                <span class="bull" id="line_label">&bull;</span>Dòng [<strong class="line_number_form">' . $line . '</strong>/<strong class="line_number_form">' . ($count - 1) . '</strong>]:
+                <span class="bull" id="line_label">&bull;</span>Dòng [<strong class="line_number_form">'.$line.'</strong>/<strong class="line_number_form">'.($count - 1).'</strong>]:
                 <div class="box_text break-word">
-                    <span>' . htmlspecialchars($lines[$line]) . '</span>
+                    <span>'.htmlspecialchars($lines[$line]).'</span>
                 </div>
                 <div style="margin-left: -4px">
-                    <form action="delete_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line=' . $line . $page['paramater_1'] . '#line_label" method="post">
+                    <form action="delete_line.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'&line='.$line.$page['paramater_1'].'#line_label" method="post">
                         <input type="submit" name="continue" value="Tiếp tục"/>
                         <input type="submit" name="delete" value="Xóa"/>
-                        <a href="edit_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line=' . $line . $page['paramater_1'] . '" id="href_line_edit">Sửa</a>
+                        <a href="edit_line.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'&line='.$line.$page['paramater_1'].'" id="href_line_edit">Sửa</a>
                     </form>
                 </div><hr/>
-                <form action="' . $url['action'] . '" method="post">
+                <form action="'.$url['action'].'" method="post">
                     <table id="action_page">
                         <tr>
-                            <td id="prev">' . $url['prev'] . '</td>
+                            <td id="prev">'.$url['prev'].'</td>
                             <td id="input">
-                                <input type="text" name="line" value="' . $line . '"/>
+                                <input type="text" name="line" value="'.$line.'"/>
                             </td>
                             <td id="submit">
                                 <input type="submit" name="go" value="Đến"/>
                             </td>
-                            <td id="next">' . $url['next'] . '</td>
+                            <td id="next">'.$url['next'].'</td>
                         </tr>
                     </table>
                 </form>
@@ -168,17 +168,17 @@ define('ACCESS', true);
             </div>
             <div class="title">Chức năng</div>
             <ul class="list">
-                <li><img src="icon/edit.png"/> <a href="edit_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '&line=' . $line . $page['paramater_1'] . '">Sửa dòng</a></li>
-                <li><img src="icon/edit_text_line.png"/> <a href="edit_text_line.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . $page['paramater_1'] . '#line_number_' . $line . '">Sửa theo dòng</a></li>
-                <li><img src="icon/edit.png"/> <a href="edit_text.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '">Sửa văn bản</a></li>
-                <li><img src="icon/download.png"/> <a href="file_download.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '">Tải về</a></li>
-                <li><img src="icon/info.png"/> <a href="file.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '">Thông tin</a></li>
-                <li><img src="icon/rename.png"/> <a href="file_rename.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '">Đổi tên</a></li>
-                <li><img src="icon/copy.png"/> <a href="file_copy.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '">Sao chép</a></li>
-                <li><img src="icon/move.png"/> <a href="file_move.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '">Di chuyển</a></li>
-                <li><img src="icon/delete.png"/> <a href="file_delete.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '">Xóa</a></li>
-                <li><img src="icon/access.png"/> <a href="file_chmod.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '">Chmod</a></li>
-                <li><img src="icon/list.png"/> <a href="index.php?dir=' . $dirEncode . $pages['paramater_1'] . '">Danh sách</a></li>
+                <li><img src="icon/edit.png"/> <a href="edit_line.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'&line='.$line.$page['paramater_1'].'">Sửa dòng</a></li>
+                <li><img src="icon/edit_text_line.png"/> <a href="edit_text_line.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].$page['paramater_1'].'#line_number_'.$line.'">Sửa theo dòng</a></li>
+                <li><img src="icon/edit.png"/> <a href="edit_text.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">Sửa văn bản</a></li>
+                <li><img src="icon/download.png"/> <a href="file_download.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">Tải về</a></li>
+                <li><img src="icon/info.png"/> <a href="file.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">Thông tin</a></li>
+                <li><img src="icon/rename.png"/> <a href="file_rename.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">Đổi tên</a></li>
+                <li><img src="icon/copy.png"/> <a href="file_copy.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">Sao chép</a></li>
+                <li><img src="icon/move.png"/> <a href="file_move.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">Di chuyển</a></li>
+                <li><img src="icon/delete.png"/> <a href="file_delete.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">Xóa</a></li>
+                <li><img src="icon/access.png"/> <a href="file_chmod.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">Chmod</a></li>
+                <li><img src="icon/list.png"/> <a href="index.php?dir='.$dirEncode.$pages['paramater_1'].'">Danh sách</a></li>
             </ul>';
         }
     } else {

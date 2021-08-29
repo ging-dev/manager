@@ -1,5 +1,5 @@
 <?php if (!defined('ACCESS')) {
-    die('Not access');
+    exit('Not access');
 } ?>
 
         </div>

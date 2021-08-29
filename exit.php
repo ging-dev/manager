@@ -8,12 +8,12 @@ define('ACCESS', true);
         unset($_SESSION[SESS]);
 
         $ref = $_SERVER['REQUEST_URI'];
-        $ref = $ref != $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ? $ref : null;
+        $ref = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] != $ref ? $ref : null;
 
         if (IS_LOGIN) {
             goURL('login.php');
         } else {
-            goURL($ref != null ? $ref : 'index.php');
+            goURL(null != $ref ? $ref : 'index.php');
         }
     } else {
         goURL('login.php');

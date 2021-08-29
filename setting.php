@@ -7,11 +7,11 @@ define('ACCESS', true);
     if (IS_LOGIN) {
         $title = 'Cài đặt';
         $ref = $_POST['ref'] ?? (isset($_SERVER['HTTP_REFFRER']) ? $_SERVER['HTTP_REFERER'] : null);
-        $ref = $ref != $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ? $ref : null;
+        $ref = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] != $ref ? $ref : null;
 
         include_once 'header.php';
 
-        echo '<div class="title">' . $title . '</div>';
+        echo '<div class="title">'.$title.'</div>';
 
         $username = $configs['username'];
         $passwordO = null;
@@ -67,22 +67,22 @@ define('ACCESS', true);
         echo '<div class="list">
             <form action="setting.php" method="post">
                 <span class="bull">&bull;</span>Tài khoản:<br/>
-                <input type="text" name="username" value="' . $username . '" size="18"/><br/>
+                <input type="text" name="username" value="'.$username.'" size="18"/><br/>
                 <span class="bull">&bull;</span>Mật khẩu cũ:<br/>
-                <input type="password" name="password_o" value="' . $passwordO . '" size="18"/><br/>
+                <input type="password" name="password_o" value="'.$passwordO.'" size="18"/><br/>
                 <span class="bull">&bull;</span>Mật khẩu mới:<br/>
-                <input type="password" name="password_n" value="' . $passwordN . '" size="18"/><br/>
+                <input type="password" name="password_n" value="'.$passwordN.'" size="18"/><br/>
                 <span class="bull">&bull;</span>Nhập lại mật khẩu mới:<br/>
-                <input type="password" name="verify_n" value="' . $verifyN . '" size="18"/><br/>
+                <input type="password" name="verify_n" value="'.$verifyN.'" size="18"/><br/>
                 <span class="bull">&bull;</span>Phân trang danh sách:<br/>
-                <input type="text" name="page_list" value="' . $pageList . '" size="18"/><br/>
+                <input type="text" name="page_list" value="'.$pageList.'" size="18"/><br/>
                 <span class="bull">&bull;</span>Phân trang sửa văn bản thường:<br/>
-                <input type="text" name="page_file_edit" value="' . $pageFileEdit . '" size="18"/><br/>
+                <input type="text" name="page_file_edit" value="'.$pageFileEdit.'" size="18"/><br/>
                 <span class="bull">&bull;</span>Phân trang sửa văn bản theo dòng:<br/>
-                <input type="text" name="page_file_edit_line" value="' . $pageFileEditLine . '" size="18"/><br/>
+                <input type="text" name="page_file_edit_line" value="'.$pageFileEditLine.'" size="18"/><br/>
                 <span class="bull">&bull;</span>Phân trang danh sách dữ liệu sql:<br/>
-                <input type="text" name="page_database_list_rows" value="' . $pageDatabaseListRows . '" size="18"/><br/>
-                <input type="hidden" name="ref" value="' . $ref . '"/>
+                <input type="text" name="page_database_list_rows" value="'.$pageDatabaseListRows.'" size="18"/><br/>
+                <input type="hidden" name="ref" value="'.$ref.'"/>
                 <input type="submit" name="submit" value="Lưu"/>
             </form>
         </div>
@@ -90,8 +90,8 @@ define('ACCESS', true);
         <div class="title">Chức năng</div>
         <ul class="list">';
 
-        if ($ref != null) {
-            echo '<li><img src="icon/back.png"/> <a href="' . $ref . '">Quay lại</a></li>';
+        if (null != $ref) {
+            echo '<li><img src="icon/back.png"/> <a href="'.$ref.'">Quay lại</a></li>';
         } else {
             echo '<li><img src="icon/list.png"/> <a href="index.php">Danh sách</a></li>';
         }

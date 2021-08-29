@@ -21,7 +21,7 @@ define('ACCESS', true);
             include PATH_DATABASE;
 
             if (isDatabaseVariable($databases)) {
-                $host =$databases['db_host'];
+                $host = $databases['db_host'];
                 $username = $databases['db_username'];
                 $password = $databases['db_password'];
                 $name = $databases['db_name'];
@@ -38,8 +38,8 @@ define('ACCESS', true);
                     }
                 }
             } elseif (!isset($_POST['submit'])) {
-                if (@is_file(REALPATH . '/' . PATH_DATABASE)) {
-                    @unlink(REALPATH . '/' . PATH_DATABASE);
+                if (@is_file(REALPATH.'/'.PATH_DATABASE)) {
+                    @unlink(REALPATH.'/'.PATH_DATABASE);
                 }
 
                 $notice = '<div class="notice_failure">Cấu hình database bị lỗi</div>';
@@ -51,7 +51,7 @@ define('ACCESS', true);
             $username = addslashes($_POST['username']);
             $password = addslashes($_POST['password']);
             $name = addslashes($_POST['name']);
-            $auto = isset($_POST['is_auto']) && intval($_POST['is_auto']) == 1;
+            $auto = isset($_POST['is_auto']) && 1 == intval($_POST['is_auto']);
             $conn = @mysqli_connect($host, $username, $password);
 
             if (empty($host) || empty($username)) {
@@ -70,26 +70,26 @@ define('ACCESS', true);
         }
 
         if ($go) {
-            if (empty($name) || $name == null) {
+            if (empty($name) || null == $name) {
                 goURL('database_lists.php');
             } else {
                 goURL('database_tables.php');
             }
         }
 
-        echo '<div class="title">' . $title . '</div>';
+        echo '<div class="title">'.$title.'</div>';
         echo $notice;
         echo '<div class="list">
             <form action="database.php" method="post">
                 <span class="bull">&bull;</span>Host:<br/>
-                <input type="text" name="host" value="' . stripslashes($host) . '" size="18"/><br/>
+                <input type="text" name="host" value="'.stripslashes($host).'" size="18"/><br/>
                 <span class="bull">&bull;</span>Tài khoản database:<br/>
-                <input type="text" name="username" value="' . stripslashes($username) . '" size="18"/><br/>
+                <input type="text" name="username" value="'.stripslashes($username).'" size="18"/><br/>
                 <span class="bull">&bull;</span>Mật khẩu database:<br/>
-                <input type="name" name="password" value="' . stripslashes($password) . '" size="18" autocomplete="off"/><br/>
+                <input type="name" name="password" value="'.stripslashes($password).'" size="18" autocomplete="off"/><br/>
                 <span class="bull">&bull;</span>Tên database:<br/>
-                <input type="text" name="name" value="' . stripslashes($name) . '" size="18"/><br/>
-                <input type="checkbox" name="is_auto" value="1"' . ($auto ? ' checked="checked"' : null) . '/>Tự động kết nối<br/>
+                <input type="text" name="name" value="'.stripslashes($name).'" size="18"/><br/>
+                <input type="checkbox" name="is_auto" value="1"'.($auto ? ' checked="checked"' : null).'/>Tự động kết nối<br/>
                 <input type="submit" name="submit" value="Kết nối"/>
             </form>
         </div>

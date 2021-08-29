@@ -14,7 +14,7 @@
         if (IS_CONNECT) {
             if ($databases['is_auto']) {
                 if (!createDatabaseConfig($databases['db_host'], $databases['db_username'], $databases['db_password'], $databases['db_name'], false)) {
-                    echo '<div class="title">' . $title . '</div>
+                    echo '<div class="title">'.$title.'</div>
                     <div class="list">Ngắt kết nối thất bại</div>
                     <div class="title">Chức năng</div>
                     <ul class="list">';
@@ -33,7 +33,7 @@
                 goURL('database.php');
             }
         } else {
-            echo '<div class="title">' . $title . '</div>
+            echo '<div class="title">'.$title.'</div>
             <div class="list">Lỗi cấu hình hoặc không kết nối được</div>
             <div class="title">Chức năng</div>
             <ul class="list">

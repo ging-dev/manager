@@ -11,7 +11,7 @@
         include_once 'database_connect.php';
 
         if (IS_CONNECT) {
-            $title .= ': ' . DATABASE_NAME;
+            $title .= ': '.DATABASE_NAME;
 
             include_once 'header.php';
 
@@ -42,7 +42,7 @@
                 $auto_increment = isset($_POST['auto_increment']);
                 $notice = '<div class="notice_failure">';
 
-                if ($collection != MYSQL_COLLECTION_NONE && !preg_match('#^(.+?)' . MYSQL_COLLECTION_SPLIT . '(.+?)$#i', $collection, $matches)) {
+                if (MYSQL_COLLECTION_NONE != $collection && !preg_match('#^(.+?)'.MYSQL_COLLECTION_SPLIT.'(.+?)$#i', $collection, $matches)) {
                     $notice .= 'Mã hóa - Đối chiếu không hợp lệ';
                 } elseif (empty($table)) {
                     $notice .= 'Chưa nhập tên bảng';
@@ -51,88 +51,88 @@
                 } elseif (!empty($length) && !preg_match('#\\b[0-9]+\\b#', $length)) {
                     $notice .= 'Độ dài không hợp lệ';
                 } else {
-                    $type_put = $type . (empty($length) == false ? "($length)" : null);
-                    $collection_put = $collection == MYSQL_COLLECTION_NONE ? null : 'CHARACTER SET ' . $matches[1] . ' COLLATE ' . $matches[2];
-                    $attributes_put = $attributes == MYSQL_ATTRIBUTES_NONE ? null : $attributes;
+                    $type_put = $type.(false == empty($length) ? "($length)" : null);
+                    $collection_put = MYSQL_COLLECTION_NONE == $collection ? null : 'CHARACTER SET '.$matches[1].' COLLATE '.$matches[2];
+                    $attributes_put = MYSQL_ATTRIBUTES_NONE == $attributes ? null : $attributes;
                     $null_put = $is_null ? 'NULL' : 'NOT NULL';
-                    $default_put = $default == null ? null : "DEFAULT '$default'";
+                    $default_put = null == $default ? null : "DEFAULT '$default'";
                     $auto_increment_put = $auto_increment ? 'AUTO_INCREMENT' : null;
-                    $field_key_put = $field_key == MYSQL_FIELD_KEY_NONE ? null : ", $field_key(`$column`)";
+                    $field_key_put = MYSQL_FIELD_KEY_NONE == $field_key ? null : ", $field_key(`$column`)";
 
                     $sql = "CREATE TABLE `$table` ";
                     $sql .= "(`$column` ";
                     $sql .= $type_put;
 
-                    if ($attributes_put != null) {
-                        $sql .= ' ' . $attributes_put;
+                    if (null != $attributes_put) {
+                        $sql .= ' '.$attributes_put;
                     }
 
-                    $sql .= ' ' . $null_put;
+                    $sql .= ' '.$null_put;
 
-                    if ($default_put != null) {
-                        $sql .= ' ' . $default_put;
+                    if (null != $default_put) {
+                        $sql .= ' '.$default_put;
                     }
 
-                    if ($auto_increment_put != null) {
-                        $sql .= ' ' . $auto_increment_put;
+                    if (null != $auto_increment_put) {
+                        $sql .= ' '.$auto_increment_put;
                     }
 
-                    if ($field_key_put != null) {
+                    if (null != $field_key_put) {
                         $sql .= $field_key_put;
                     }
 
-                    $sql .= ') ENGINE=' . $engine_storage;
+                    $sql .= ') ENGINE='.$engine_storage;
 
-                    if ($collection_put != null) {
-                        $sql .= ' ' . $collection_put;
+                    if (null != $collection_put) {
+                        $sql .= ' '.$collection_put;
                     }
 
-                    if ($auto_increment_put != null) {
-                        $sql .= ' ' . $auto_increment_put . '=1';
+                    if (null != $auto_increment_put) {
+                        $sql .= ' '.$auto_increment_put.'=1';
                     }
 
                     if (!@mysqli_query($conn, $sql)) {
-                        $notice .= 'Lỗi tạo bảng: ' . mysqli_error($conn);
+                        $notice .= 'Lỗi tạo bảng: '.mysqli_error($conn);
                     } else {
-                        goURL('database_tables.php' . DATABASE_NAME_PARAMATER_0);
+                        goURL('database_tables.php'.DATABASE_NAME_PARAMATER_0);
                     }
                 }
 
-                $collection = $collection != MYSQL_COLLECTION_NONE && isset($matches) ? $matches[2] : MYSQL_COLLECTION_NONE;
+                $collection = MYSQL_COLLECTION_NONE != $collection && isset($matches) ? $matches[2] : MYSQL_COLLECTION_NONE;
                 $notice .= '</div>';
             }
 
-            echo '<div class="title"><div class="ellipsis">' . $title . '</div></div>';
+            echo '<div class="title"><div class="ellipsis">'.$title.'</div></div>';
             echo $notice;
             echo '<div class="list">
-                <form action="database_table_create.php' . DATABASE_NAME_PARAMATER_0 . '" method="post">
+                <form action="database_table_create.php'.DATABASE_NAME_PARAMATER_0.'" method="post">
                     <span class="bull">&bull;</span>Tên bảng:<br/>
-                    <input type="text" name="table" value="' . stripslashes($table) . '" size="18"/><hr/>
+                    <input type="text" name="table" value="'.stripslashes($table).'" size="18"/><hr/>
                     <span class="bull">&bull;</span>Tên cột:<br/>
-                    <input type="text" name="column" value="' . stripslashes($column) . '" size="18"/><br/>
+                    <input type="text" name="column" value="'.stripslashes($column).'" size="18"/><br/>
                     <span class="bull">&bull;</span>Giá trị mặc định:<br/>
-                    <input type="text" name="default" value="' . stripslashes($default) . '" size="18"/><br/>
+                    <input type="text" name="default" value="'.stripslashes($default).'" size="18"/><br/>
                     <span class="bull">&bull;</span>Đội dài:<br/>
-                    <input type="text" name="length" value="' . stripslashes($length) . '" size="18"/><br/>
+                    <input type="text" name="length" value="'.stripslashes($length).'" size="18"/><br/>
                     <span class="bull">&bull;</span>Loại dữ liệu:<br/>
-                    <select name="type">' . printDataType(stripslashes($type)) . '</select><br/>
+                    <select name="type">'.printDataType(stripslashes($type)).'</select><br/>
                     <span class="bull">&bull;</span>Mã hóa - Đối chiếu:<br/>
-                    <select name="collection">' . printCollection(stripslashes($collection)) . '</select><br/>
+                    <select name="collection">'.printCollection(stripslashes($collection)).'</select><br/>
                     <span class="bull">&bull;</span>Thuộc tính:<br/>
-                    <select name="attributes">' . printAttributes(stripslashes($attributes)) . '</select><br/>
+                    <select name="attributes">'.printAttributes(stripslashes($attributes)).'</select><br/>
                     <span class="bull">&bull;</span>Lưu trữ:<br/>
-                    <select name="engine_storage">' . printEngineStorage(stripslashes($engine_storage)) . '</select><br/>
+                    <select name="engine_storage">'.printEngineStorage(stripslashes($engine_storage)).'</select><br/>
                     <span class="bull">&bull;</span>Khóa:
-                    <br/>' . printFieldKey('field_key', stripslashes($field_key)) . '<br/>
+                    <br/>'.printFieldKey('field_key', stripslashes($field_key)).'<br/>
                     <span class="bull">&bull;</span>Thêm:<br/>
-                    <input type="checkbox" name="is_null" value="1"' . ($is_null ? ' checked="checked"' : null) . '/>Null<br/>
-                    <input type="checkbox" name="auto_increment" value="1"' . ($auto_increment ? ' checked="checked"' : null) . '/>Tự tăng giá trị<hr/>
+                    <input type="checkbox" name="is_null" value="1"'.($is_null ? ' checked="checked"' : null).'/>Null<br/>
+                    <input type="checkbox" name="auto_increment" value="1"'.($auto_increment ? ' checked="checked"' : null).'/>Tự tăng giá trị<hr/>
                     <input type="submit" name="submit" value="Tạo"/>
                 </form>
             </div>
             <div class="title">Chức năng</div>
             <ul class="list">
-                <li><img src="icon/database_table.png"/> <a href="database_tables.php' . DATABASE_NAME_PARAMATER_0 . '">Danh sách bảng</a></li>';
+                <li><img src="icon/database_table.png"/> <a href="database_tables.php'.DATABASE_NAME_PARAMATER_0.'">Danh sách bảng</a></li>';
 
             if (IS_DATABASE_ROOT) {
                 echo '<li><img src="icon/database.png"/> <a href="database_lists.php">Danh sách database</a></li>';
@@ -142,7 +142,7 @@
         } elseif (ERROR_CONNECT == false && ERROR_SELECT_DB && IS_DATABASE_ROOT) {
             include_once 'header.php';
 
-            echo '<div class="title">' . $title . '</div>
+            echo '<div class="title">'.$title.'</div>
             <div class="list">Không thể chọn database</div>
             <div class="title">Chức năng</div>
             <ul class="list">
@@ -151,7 +151,7 @@
         } else {
             include_once 'header.php';
 
-            echo '<div class="title">' . $title . '</div>
+            echo '<div class="title">'.$title.'</div>
             <div class="list">Lỗi cấu hình hoặc không kết nối được</div>
             <div class="title">Chức năng</div>
             <ul class="list">
