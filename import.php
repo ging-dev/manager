@@ -33,7 +33,7 @@ define('ACCESS', true);
                 if ($isEmpty) {
                     echo '<div class="notice_failure">Chưa nhập url nào cả</div>';
                 } else {
-                    for ($i = 0; $i < (is_countable($_POST['url']) ? count($_POST['url']) : 0); ++$i) {
+                    for ($i = 0, $itemsCount = (is_countable($_POST['url']) ? count($_POST['url']) : 0); $i < $itemsCount; ++$i) {
                         if (!empty($_POST['url'][$i])) {
                             $_POST['url'][$i] = processImport($_POST['url'][$i]);
 

@@ -343,7 +343,7 @@ define('ACCESS', true);
                     <span>'.printPath($dir, true).'</span><hr/>
                     <form action="action.php?dir='.$dirEncode.$pages['paramater_1'].'" method="post">';
 
-                for ($i = 0; $i < (is_countable($entry) ? count($entry) : 0); ++$i) {
+                for ($i = 0, $entryCount = (is_countable($entry) ? count($entry) : 0); $i < $entryCount; ++$i) {
                     $entryPath = $dir.'/'.$entry[$i];
                     $entryName = $entry[$i];
 

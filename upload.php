@@ -33,7 +33,7 @@ define('ACCESS', true);
                 if ($isEmpty) {
                     echo '<div class="notice_failure">Chưa chọn tập tin</div>';
                 } else {
-                    for ($i = 0; $i < (is_countable($_FILES['file']['name']) ? count($_FILES['file']['name']) : 0); ++$i) {
+                    for ($i = 0, $count = (is_countable($_FILES['file']['name']) ? count($_FILES['file']['name']) : 0); $i < $count; ++$i) {
                         if (!empty($_FILES['file']['name'][$i])) {
                             if (UPLOAD_ERR_INI_SIZE == $_FILES['file']['error']) {
                                 echo '<div class="notice_failure">Tập tin <strong class="file_name_upload">'.$_FILES['file']['name'][$i].'</strong> vượt quá kích thước cho phép</div>';
