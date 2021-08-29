@@ -44,9 +44,9 @@ define('ACCESS', true);
                 <span class="bull">&bull;</span><span>' . printPath($dir . '/' . $name, true) . '</span><hr/>
                 <form action="folder_zip.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '" method="post">
                     <span class="bull">&bull;</span>Tên tập tin nén:<br/>
-                    <input type="text" name="name" value="' . (isset($_POST['name']) ? $_POST['name'] : $name . '.zip') . '" size="18"/><br/>
+                    <input type="text" name="name" value="' . ($_POST['name'] ?? $name . '.zip') . '" size="18"/><br/>
                     <span class="bull">&bull;</span>Đường dẫn lưu:<br/>
-                    <input type="text" name="path" value="' . (isset($_POST['path']) ? $_POST['path'] : $dir) . '" size="18"/><br/>
+                    <input type="text" name="path" value="' . ($_POST['path'] ?? $dir) . '" size="18"/><br/>
                     <input type="checkbox" name="is_delete" value="1"/> Xóa thư mục<br/>
                     <input type="submit" name="submit" value="Nén"/>
                 </form>

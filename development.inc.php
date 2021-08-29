@@ -43,10 +43,10 @@
                 $version = $json['version'];
                 $isCreator = false;
 
-                if (count($files) != count($entryFiles) || count($times) != count($entryTimes)) {
+                if (count($files) != (is_countable($entryFiles) ? count($entryFiles) : 0) || count($times) != (is_countable($entryTimes) ? count($entryTimes) : 0)) {
                     $isModifier = true;
                 } else {
-                    for ($i = 0; $i < count($entryFiles); ++$i) {
+                    for ($i = 0; $i < (is_countable($entryFiles) ? count($entryFiles) : 0); ++$i) {
                         $file = $entryFiles[$i];
                         $time = intval($entryTimes[$i]);
 

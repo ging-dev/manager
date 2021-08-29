@@ -51,7 +51,7 @@ define('ACCESS', true);
                 foreach ($lists as $entry) {
                     $filename = $entry['filename'];
 
-                    if (strpos($filename, '/') === false && $base == null) {
+                    if (!str_contains($filename, '/') && $base == null) {
                         $arrays['files'][$filename] = array('path' => $filename, 'name' => $filename, 'folder' => false, 'size' => $entry['size']);
                     } elseif (preg_match('#(' . $base . '(.+?))(/|$)+#', $filename, $matches)) {
                         if ($matches[3] == '/' && !isset($arrays['folders'][$matches[2]])) {
@@ -90,7 +90,7 @@ define('ACCESS', true);
                 array_splice($sorts, 0, count($sorts));
                 unset($sorts);
 
-                if ($path != null && strpos($path, '/') !== false) {
+                if ($path != null && str_contains($path, '/')) {
                     $array = explode('/', preg_replace('|^/(.*?)$|', '\1', $path));
                     $html = '/<a href="file_viewzip.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '">' . $root . '</a>';
                     $item = null;
@@ -157,7 +157,7 @@ define('ACCESS', true);
                 if ($count <= 0) {
                     echo '<li class="normal"><img src="icon/empty.png"/> <span class="empty">Không có thư mục hoặc tập tin</span></li>';
                 } else {
-                    foreach ($arrays as $key => $value) {
+                    foreach ($arrays as $value) {
                         $pathEncode = rawurlencode($value['path']);
 
                         if ($value['folder']) {
@@ -187,8 +187,8 @@ define('ACCESS', true);
                                 $icon = $type;
                             } elseif (in_array($type, $formats['image'])) {
                                 $icon = 'image';
-                            } elseif (in_array(strtolower(strpos($name, '.') !== false ? substr($name, 0, strpos($name, '.')) : $name), $formats['source'])) {
-                                $icon = strtolower(strpos($name, '.') !== false ? substr($name, 0, strpos($name, '.')) : $name);
+                            } elseif (in_array(strtolower(str_contains($name, '.') ? substr($name, 0, strpos($name, '.')) : $name), $formats['source'])) {
+                                $icon = strtolower(str_contains($name, '.') ? substr($name, 0, strpos($name, '.')) : $name);
                             }
 
                             echo '<li class="file">

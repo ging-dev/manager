@@ -56,7 +56,7 @@ define('ACCESS', true);
                 <span>' . printPath($dir, true) . '</span><hr/>
                 <form action="create.php?dir=' . $dirEncode . $pages['paramater_1'] . '" method="post">
                     <span class="bull">&bull;</span>Tên thư mục hoặc tập tin:<br/>
-                    <input type="text" name="name" value="' . (isset($_POST['name']) ? $_POST['name'] : null) . '" size="18"/><br/>
+                    <input type="text" name="name" value="' . ($_POST['name'] ?? null) . '" size="18"/><br/>
                     <input type="radio" name="type" value="0" checked="checked"/>Thư mục<br/>
                     <input type="radio" name="type" value="1"/>Tập tin<br/>
                     <input type="submit" name="submit" value="Tạo"/>

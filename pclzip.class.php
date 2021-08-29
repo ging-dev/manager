@@ -81,13 +81,13 @@
 
  class PclZip
  {
-     public $zipname = '';
+     public string $zipname = '';
      public $zip_fd = 0;
      public $error_code = 1;
      public $error_string = '';
-     public $magic_quotes_status;
+     public int|bool $magic_quotes_status;
 
-     public function PclZip($p_zipname)
+     public function __construct($p_zipname)
      {
          if (!function_exists('gzopen')) {
              die('Abort ' . basename(__FILE__) . ' : Missing zlib extensions');
@@ -96,8 +96,6 @@
          $this->zipname = $p_zipname;
          $this->zip_fd = 0;
          $this->magic_quotes_status = -1;
-
-         return;
      }
 
      public function create($p_filelist)
@@ -596,9 +594,7 @@
 
      public function deleteByIndex($p_index)
      {
-         $p_list = $this->delete(PCLZIP_OPT_BY_INDEX, $p_index);
-
-         return $p_list;
+         return $this->delete(PCLZIP_OPT_BY_INDEX, $p_index);
      }
 
      public function properties()
@@ -650,7 +646,7 @@
 
          $this->privErrorReset();
 
-         if ((is_object($p_archive)) && (get_class($p_archive) == 'pclzip')) {
+         if ((is_object($p_archive)) && ($p_archive::class == 'pclzip')) {
              $v_result = $this->privDuplicate($p_archive->zipname);
          } elseif (is_string($p_archive)) {
              if (!is_file($p_archive)) {
@@ -677,7 +673,7 @@
              return(0);
          }
 
-         if ((is_object($p_archive_to_add)) && (get_class($p_archive_to_add) == 'pclzip')) {
+         if ((is_object($p_archive_to_add)) && ($p_archive_to_add::class == 'pclzip')) {
              $v_result = $this->privMerge($p_archive_to_add);
          } elseif (is_string($p_archive_to_add)) {
              $v_object_archive = new PclZip($p_archive_to_add);
@@ -824,7 +820,7 @@
               return PclZip::errorCode();
           }
 
-                    $v_result_list[$p_options_list[$i]] = $v_value*1048576;
+                    $v_result_list[$p_options_list[$i]] = $v_value*1_048_576;
           $i++;
         break;
 
@@ -984,9 +980,6 @@
               $v_sort_value = $v_result_list[$p_options_list[$i]][$j]['start'];
           }
 
-                    if ($v_sort_flag) {
-                    }
-
                     $i++;
         break;
 
@@ -1058,9 +1051,6 @@
              }
          }
 
-         if (!isset($v_result_list[PCLZIP_OPT_TEMP_FILE_THRESHOLD])) {
-         }
-
          return $v_result;
      }
 
@@ -1078,10 +1068,10 @@
          $last = strtolower(substr($v_memory_limit, -1));
 
          if ($last == 'g') {
-             $v_memory_limit = $v_memory_limit*1073741824;
+             $v_memory_limit = $v_memory_limit*1_073_741_824;
          }
          if ($last == 'm') {
-             $v_memory_limit = $v_memory_limit*1048576;
+             $v_memory_limit = $v_memory_limit*1_048_576;
          }
          if ($last == 'k') {
              $v_memory_limit = $v_memory_limit*1024;
@@ -1090,7 +1080,7 @@
          $p_options[PCLZIP_OPT_TEMP_FILE_THRESHOLD] = floor($v_memory_limit*PCLZIP_TEMPORARY_FILE_RATIO);
 
 
-         if ($p_options[PCLZIP_OPT_TEMP_FILE_THRESHOLD] < 1048576) {
+         if ($p_options[PCLZIP_OPT_TEMP_FILE_THRESHOLD] < 1_048_576) {
              unset($p_options[PCLZIP_OPT_TEMP_FILE_THRESHOLD]);
          }
 
@@ -1280,7 +1270,6 @@
      public function privCreate($p_filedescr_list, &$p_result_list, &$p_options)
      {
          $v_result=1;
-         $v_list_detail = array();
 
          $this->privDisableMagicQuotes();
 
@@ -1300,12 +1289,9 @@
      public function privAdd($p_filedescr_list, &$p_result_list, &$p_options)
      {
          $v_result=1;
-         $v_list_detail = array();
 
          if ((!is_file($this->zipname)) || (filesize($this->zipname) == 0)) {
-             $v_result = $this->privCreate($p_filedescr_list, $p_result_list, $p_options);
-
-             return $v_result;
+             return $this->privCreate($p_filedescr_list, $p_result_list, $p_options);
          }
          $this->privDisableMagicQuotes();
 
@@ -2066,7 +2052,6 @@
          if (($p_remove_path != "") && (substr($p_remove_path, -1) != '/')) {
              $p_remove_path .= '/';
          }
-         $p_remove_path_size = strlen($p_remove_path);
 
          if (($v_result = $this->privOpenFd('rb')) != 1) {
              $this->privSwapBackMagicQuotes();
@@ -2386,11 +2371,9 @@
                          return PclZip::errorCode();
                      }
                  } elseif (filemtime($p_entry['filename']) > $p_entry['mtime']) {
-                     if ((isset($p_options[PCLZIP_OPT_REPLACE_NEWER]))
-            && ($p_options[PCLZIP_OPT_REPLACE_NEWER]===true)) {
-                     } else {
+                     if (!((isset($p_options[PCLZIP_OPT_REPLACE_NEWER]))
+            && ($p_options[PCLZIP_OPT_REPLACE_NEWER]===true))) {
                          $p_entry['status'] = "newer_exist";
-
                          if ((isset($p_options[PCLZIP_OPT_STOP_ON_ERROR]))
                 && ($p_options[PCLZIP_OPT_STOP_ON_ERROR]===true)) {
                              PclZip::privErrorLog(
@@ -2965,7 +2948,6 @@
      public function privDeleteByRule(&$p_result_list, &$p_options)
      {
          $v_result=1;
-         $v_list_detail = array();
 
          if (($v_result=$this->privOpenFd('rb')) != 1) {
              return $v_result;
@@ -3198,15 +3180,11 @@
          $v_result=1;
 
          if (!is_file($p_archive_to_add->zipname)) {
-             $v_result = 1;
-
-             return $v_result;
+             return 1;
          }
 
          if (!is_file($this->zipname)) {
-             $v_result = $this->privDuplicate($p_archive_to_add->zipname);
-
-             return $v_result;
+             return $this->privDuplicate($p_archive_to_add->zipname);
          }
 
          if (($v_result=$this->privOpenFd('rb')) != 1) {
@@ -3322,9 +3300,7 @@
          $v_result=1;
 
          if (!is_file($p_archive_filename)) {
-             $v_result = 1;
-
-             return $v_result;
+             return 1;
          }
 
          if (($v_result=$this->privOpenFd('wb')) != 1) {
@@ -3581,9 +3557,7 @@
                             }
                         }
 
-                        $v_result = 'Unknown';
-
-                        return $v_result;
+                        return 'Unknown';
                     }
 
                         function PclZipUtilTranslateWinPath($p_path, $p_remove_disk_letter=true)

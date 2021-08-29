@@ -65,7 +65,7 @@ define('ACCESS', true);
                 <span class="bull">&bull;</span><span>' . printPath($dir . '/' . $name) . '</span><hr/>
                 <form action="file_unzip.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '" method="post">
                     <span class="bull">&bull;</span>Đường dẫn giải nén:<br/>
-                    <input type="text" name="path" value="' . (isset($_POST['path']) ? $_POST['path'] : $dir) . '" size="18"/><br/>
+                    <input type="text" name="path" value="' . ($_POST['path'] ?? $dir) . '" size="18"/><br/>
                     <input type="checkbox" name="is_delete" value="1"' . (isset($_POST['is_delete']) ? ' checked="checked"' : null) . '/> Xóa tập tin zip<br/>
                     <input type="submit" name="submit" value="Giải nén"/>
                 </form>

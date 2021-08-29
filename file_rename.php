@@ -41,7 +41,7 @@ define('ACCESS', true);
                 <span class="bull">&bull;</span><span>' . printPath($dir . '/' . $name) . '</span><hr/>
                 <form action="file_rename.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '" method="post">
                     <span class="bull">&bull;</span>Tên tập tin:<br/>
-                    <input type="text" name="name" value="' . (isset($_POST['name']) ? $_POST['name'] : $name) . '" size="18"/><br/>
+                    <input type="text" name="name" value="' . ($_POST['name'] ?? $name) . '" size="18"/><br/>
                     <input type="submit" name="submit" value="Thay đổi"/>
                 </form>
             </div>

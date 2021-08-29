@@ -37,7 +37,7 @@ define('ACCESS', true);
                     $content = str_replace("\r\n", "\n", $content);
                     $content = str_replace("\r", "\n", $content);
 
-                    if (strpos($content, "\n") !== false) {
+                    if (str_contains($content, "\n")) {
                         $lines = explode("\n", $content);
                     } else {
                         $lines[] = $content;
@@ -46,7 +46,7 @@ define('ACCESS', true);
                     $lines[] = $content;
                 }
 
-                $count = count($lines);
+                $count = is_countable($lines) ? count($lines) : 0;
             }
 
             $path = $dir . '/' . $name;

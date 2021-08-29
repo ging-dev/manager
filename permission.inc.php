@@ -5,12 +5,12 @@
     }
 
     $script = function_exists('getenv') ? getenv('SCRIPT_NAME') : $_SERVER['SCRIPT_NAME'];
-    $script = strpos($script, '/') !== false ? dirname($script) : null;
+    $script = str_contains($script, '/') ? dirname($script) : null;
     $script = str_replace('\\', '/', $script);
 
     define('IS_INSTALL_ROOT_DIRECTORY', $script == '.' || $script == '/');
     define('IS_ACCESS_FILE_IN_FILE_MANAGER', defined('INDEX') && isset($_GET['not']));
-    define('DIRECTORY_FILE_MANAGER', strpos($script, '/') !== false ? @substr($script, strrpos($script, '/') + 1) : null);
+    define('DIRECTORY_FILE_MANAGER', str_contains($script, '/') ? @substr($script, strrpos($script, '/') + 1) : null);
     define('PATH_FILE_MANAGER', str_replace('\\', '/', strtolower($_SERVER['DOCUMENT_ROOT'] . $script)));
     define('NAME_DIRECTORY_INSTALL_FILE_MANAGER', !IS_INSTALL_ROOT_DIRECTORY ? preg_replace('#(\/+|/\+)(.+?)#s', '$2', $script) : null);
     define('PARENT_PATH_FILE_MANAGER', substr(PATH_FILE_MANAGER, 0, strlen(PATH_FILE_MANAGER) - (NAME_DIRECTORY_INSTALL_FILE_MANAGER == null ? 0 : strlen(NAME_DIRECTORY_INSTALL_FILE_MANAGER) + 1)));

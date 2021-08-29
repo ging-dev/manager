@@ -40,7 +40,7 @@ define('ACCESS', true);
                 <span class="bull">&bull;</span><span>' . printPath($dir . '/' . $name, true) . '</span><hr/>
                 <form action="folder_edit.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '" method="post">
                     <span class="bull">&bull;</span>Tên thư mục:<br/>
-                    <input type="text" name="name" value="' . (isset($_POST['name']) ? $_POST['name'] : $name) . '" size="18"/><br/>
+                    <input type="text" name="name" value="' . ($_POST['name'] ?? $name) . '" size="18"/><br/>
                     <input type="submit" name="submit" value="Đổi tên"/>
                 </form>
             </div>

@@ -43,7 +43,7 @@ define('ACCESS', true);
                 $content = str_replace("\r\n", "\n", $content);
                 $content = str_replace("\r", "\n", $content);
 
-                if (strpos($content, "\n") !== false) {
+                if (str_contains($content, "\n")) {
                     $lines = explode("\n", $content);
                     $count = count($lines);
 

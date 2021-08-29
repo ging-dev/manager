@@ -9,7 +9,7 @@
     {
         $dir = function_exists('getenv') ? getenv('SCRIPT_NAME') : $_SERVER['SCRIPT_NAME'];
         $dir = str_replace('\\', '/', $dir);
-        $dir = strpos($dir, '/') !== false ? dirname($dir) : null;
+        $dir = str_contains($dir, '/') ? dirname($dir) : null;
         $dir = str_replace('\\', '/', $dir);
         $dir = $dir == '.' || $dir == '/' ? null : $dir;
 
@@ -237,7 +237,7 @@
             return false;
         }
 
-        return in_array($format, $formats['text']) || in_array($format, $formats['other']) || in_array(strtolower(strpos($name, '.') !== false ? substr($name, 0, strpos($name, '.')) : $name), $formats['source']);
+        return in_array($format, $formats['text']) || in_array($format, $formats['other']) || in_array(strtolower(str_contains($name, '.') ? substr($name, 0, strpos($name, '.')) : $name), $formats['source']);
     }
 
     function isFormatUnknown($name)
@@ -275,9 +275,8 @@
         $var = preg_replace('#/\.\./#', '//', $var);
         $var = preg_replace('#/\.{1,2}$#', '//', $var);
         $var = preg_replace('|/{2,}|', '/', $var);
-        $var = preg_replace('|(.+?)/$|', '$1', $var);
 
-        return $var;
+        return preg_replace('|(.+?)/$|', '$1', $var);
     }
 
     function processImport($url)
@@ -296,22 +295,20 @@
         $var = preg_replace('#/\.\./#', '//', $var);
         $var = preg_replace('#/\.{1,2}$#', '//', $var);
         $var = preg_replace('|/{2,}|', '/', $var);
-        $var = preg_replace('|/?(.+?)/?$|', '$1', $var);
 
-        return $var;
+        return preg_replace('|/?(.+?)/?$|', '$1', $var);
     }
 
     function processName($var)
     {
         $var = str_replace('/', null, $var);
-        $var = str_replace('\\', null, $var);
 
-        return $var;
+        return str_replace('\\', null, $var);
     }
 
     function isNameError($var)
     {
-        return strpos($var, '\\') !== false || strpos($var, '/') !== false;
+        return str_contains($var, '\\') || str_contains($var, '/');
     }
 
     function rrmdir($path)
@@ -370,7 +367,8 @@
 
         if ($handler !== false) {
             if ($isParent && $old != '/') {
-                $end = $new = $new . '/' . end(explode('/', $old));
+                $explode = explode('/', $old);
+                $end = $new = $new . '/' . end($explode);
 
                 if (@is_file($end) || (!@is_dir($end) && !@mkdir($end))) {
                     return false;
@@ -433,7 +431,8 @@
 
         if ($handler !== false) {
             if ($isParent && $old != '/') {
-                $end = $new = $new . '/' . end(explode('/', $old));
+                $explode = explode('/', $old);
+                $end = $new = $new . '/' . end($explode);
 
                 if (@is_file($end) || (!@is_dir($end) && !@mkdir($end))) {
                     return false;
@@ -566,12 +565,12 @@
     {
         if ($size < 1024) {
             $size = $size . 'B';
-        } elseif ($size < 1048576) {
+        } elseif ($size < 1_048_576) {
             $size = round($size / 1024, 2) . 'KB';
-        } elseif ($size < 1073741824) {
-            $size = round($size / 1048576, 2) . 'MB';
+        } elseif ($size < 1_073_741_824) {
+            $size = round($size / 1_048_576, 2) . 'MB';
         } else {
-            $size = round($size / 1073741824, 2) . 'GB';
+            $size = round($size / 1_073_741_824, 2) . 'GB';
         }
 
         return $size;
@@ -630,7 +629,7 @@
         } else {
             $matches = parse_url($url);
             $host = $matches['host'];
-            $link = (isset($matches['path']) ? $matches['path'] : '/') . (isset($matches['query']) ? '?' . $matches['query'] : '') . (isset($matches['fragment']) ? '#' . $matches['fragment'] : '');
+            $link = ($matches['path'] ?? '/') . (isset($matches['query']) ? '?' . $matches['query'] : '') . (isset($matches['fragment']) ? '#' . $matches['fragment'] : '');
             $port = !empty($matches['port']) ? $matches['port'] : 80;
             $fp = @fsockopen($host, $port, $errno, $errval, 30);
 
@@ -641,7 +640,7 @@
                     $ref = 'http://www.google.com.vn/search?hl=vi&client=firefox-a&rls=org.mozilla:en-US:official&hs=hKS&q=video+clip&start=20&sa=N';
                 }
 
-                $rand_ip = rand(1, 254) . "." . rand(1, 254) . "." . rand(1, 254) . "." . rand(1, 254);
+                $rand_ip = random_int(1, 254) . "." . random_int(1, 254) . "." . random_int(1, 254) . "." . random_int(1, 254);
                 $out  = "GET $link HTTP/1.1\r\n" .
                         "Host: $host\r\n" .
                         "Referer: $ref\r\n" .
@@ -691,9 +690,9 @@
         $html = '<div class="page">';
         $center = PAGE_NUMBER - 2;
         $link = array();
-        $link[PAGE_URL_DEFAULT] = isset($url[PAGE_URL_DEFAULT]) ? $url[PAGE_URL_DEFAULT] : null;
-        $link[PAGE_URL_START] = isset($url[PAGE_URL_START]) ? $url[PAGE_URL_START] : null;
-        $link[PAGE_URL_END] = isset($url[PAGE_URL_END]) ? $url[PAGE_URL_END] : null;
+        $link[PAGE_URL_DEFAULT] = $url[PAGE_URL_DEFAULT] ?? null;
+        $link[PAGE_URL_START] = $url[PAGE_URL_START] ?? null;
+        $link[PAGE_URL_END] = $url[PAGE_URL_END] ?? null;
 
         if ($total <= PAGE_NUMBER) {
             for ($i = 1; $i <= $total; ++$i) {
@@ -759,9 +758,7 @@
             }
         }
 
-        $html .= '</div>';
-
-        return $html;
+        return $html . '</div>';
     }
 
     function getChmod($path)
@@ -789,7 +786,7 @@
 
             return $jsons->encode($var);
         } else {
-            return json_encode($var);
+            return json_encode($var, JSON_THROW_ON_ERROR);
         }
     }
 
@@ -814,7 +811,7 @@
                 $jsons->setUse(0);
             }
         } else {
-            $out = json_decode($var, $isAssoc);
+            $out = json_decode($var, $isAssoc, 512, JSON_THROW_ON_ERROR);
         }
 
         return $out;
@@ -871,7 +868,7 @@
     {
         $html = null;
 
-        if ($path != null && $path != '/' && strpos($path, '/') !== false) {
+        if ($path != null && $path != '/' && str_contains($path, '/')) {
             $array = explode('/', preg_replace('|^/(.*?)$|', '\1', $path));
             $item = null;
             $url = null;
@@ -905,7 +902,7 @@
     function getPathPHP()
     {
         if ($path = getenv('PATH')) {
-            $array = @explode(strpos($path, ':') !== false ? ':' : PATH_SEPARATOR, $path);
+            $array = @explode(str_contains($path, ':') ? ':' : PATH_SEPARATOR, $path);
 
             foreach ($array as $entry) {
                 if (strstr($entry, 'php.exe') && isset($_SERVER['WINDIR']) && is_file($entry)) {
