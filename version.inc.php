@@ -1,4 +1,6 @@
-<?php if (!defined('ACCESS')) {
+<?php
+
+if (!defined('ACCESS')) {
     die('Not acces');
 } else {
     $count = 20;
