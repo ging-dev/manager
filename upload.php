@@ -2,54 +2,54 @@
 
 define('ACCESS', true);
 
-    include_once 'function.php';
+include_once 'function.php';
 
-    if (IS_LOGIN) {
-        $title = 'Tải lên tập tin';
+if (IS_LOGIN) {
+    $title = 'Tải lên tập tin';
 
-        include_once 'header.php';
+    include_once 'header.php';
 
-        echo '<div class="title">'.$title.'</div>';
+    echo '<div class="title">'.$title.'</div>';
 
-        if (null == $dir || !is_dir(processDirectory($dir))) {
-            echo '<div class="list"><span>Đường dẫn không tồn tại</span></div>
+    if (null == $dir || !is_dir(processDirectory($dir))) {
+        echo '<div class="list"><span>Đường dẫn không tồn tại</span></div>
             <div class="title">Chức năng</div>
             <ul class="list">
                 <li><img src="icon/list.png"/> <a href="index.php'.$pages['paramater_0'].'">Danh sách</a></li>
             </ul>';
-        } else {
-            $dir = processDirectory($dir);
+    } else {
+        $dir = processDirectory($dir);
 
-            if (isset($_POST['submit'])) {
-                $isEmpty = true;
+        if (isset($_POST['submit'])) {
+            $isEmpty = true;
 
-                foreach ($_FILES['file']['name'] as $entry) {
-                    if (!empty($entry)) {
-                        $isEmpty = false;
-                        break;
-                    }
+            foreach ($_FILES['file']['name'] as $entry) {
+                if (!empty($entry)) {
+                    $isEmpty = false;
+                    break;
                 }
+            }
 
-                if ($isEmpty) {
-                    echo '<div class="notice_failure">Chưa chọn tập tin</div>';
-                } else {
-                    for ($i = 0, $count = (is_countable($_FILES['file']['name']) ? count($_FILES['file']['name']) : 0); $i < $count; ++$i) {
-                        if (!empty($_FILES['file']['name'][$i])) {
-                            if (UPLOAD_ERR_INI_SIZE == $_FILES['file']['error']) {
-                                echo '<div class="notice_failure">Tập tin <strong class="file_name_upload">'.$_FILES['file']['name'][$i].'</strong> vượt quá kích thước cho phép</div>';
+            if ($isEmpty) {
+                echo '<div class="notice_failure">Chưa chọn tập tin</div>';
+            } else {
+                for ($i = 0, $count = (is_countable($_FILES['file']['name']) ? count($_FILES['file']['name']) : 0); $i < $count; ++$i) {
+                    if (!empty($_FILES['file']['name'][$i])) {
+                        if (UPLOAD_ERR_INI_SIZE == $_FILES['file']['error']) {
+                            echo '<div class="notice_failure">Tập tin <strong class="file_name_upload">'.$_FILES['file']['name'][$i].'</strong> vượt quá kích thước cho phép</div>';
+                        } else {
+                            if (copy($_FILES['file']['tmp_name'][$i], $dir.'/'.str_replace(['_jar', '.jar1', '.jar2'], '.jar', $_FILES['file']['name'][$i]))) {
+                                echo '<div class="notice_succeed">Tải lên tập tin <strong class="file_name_upload">'.$_FILES['file']['name'][$i].'</strong>, <span class="file_size_upload">'.size($_FILES['file']['size'][$i]).'</span> thành công</div>';
                             } else {
-                                if (copy($_FILES['file']['tmp_name'][$i], $dir.'/'.str_replace(['_jar', '.jar1', '.jar2'], '.jar', $_FILES['file']['name'][$i]))) {
-                                    echo '<div class="notice_succeed">Tải lên tập tin <strong class="file_name_upload">'.$_FILES['file']['name'][$i].'</strong>, <span class="file_size_upload">'.size($_FILES['file']['size'][$i]).'</span> thành công</div>';
-                                } else {
-                                    echo '<div class="notice_failure">Tải lên tập tin <strong class="file_name_upload">'.$_FILES['file']['name'][$i].'</strong> thất bại</div>';
-                                }
+                                echo '<div class="notice_failure">Tải lên tập tin <strong class="file_name_upload">'.$_FILES['file']['name'][$i].'</strong> thất bại</div>';
                             }
                         }
                     }
                 }
             }
+        }
 
-            echo '<div class="list">
+        echo '<div class="list">
                 <span>'.printPath($dir, true).'</span><hr/>
                 <form action="upload.php?dir='.$dirEncode.$pages['paramater_1'].'" method="post" enctype="multipart/form-data">
                     <span class="bull">&bull;</span>Tập tin 1:<br/>
@@ -71,9 +71,9 @@ define('ACCESS', true);
                 <li><img src="icon/import.png"/> <a href="import.php?dir='.$dirEncode.$pages['paramater_1'].'">Nhập khẩu tập tin</a></li>
                 <li><img src="icon/list.png"/> <a href="index.php?dir='.$dirEncode.$pages['paramater_1'].'">Danh sách</a></li>
             </ul>';
-        }
-
-        include_once 'footer.php';
-    } else {
-        goURL('login.php');
     }
+
+    include_once 'footer.php';
+} else {
+    goURL('login.php');
+}

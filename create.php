@@ -2,57 +2,57 @@
 
 define('ACCESS', true);
 
-    include_once 'function.php';
+include_once 'function.php';
 
-    if (IS_LOGIN) {
-        $title = 'Tạo mới';
+if (IS_LOGIN) {
+    $title = 'Tạo mới';
 
-        include_once 'header.php';
+    include_once 'header.php';
 
-        echo '<div class="title">'.$title.'</div>';
+    echo '<div class="title">'.$title.'</div>';
 
-        if (null == $dir || !is_dir(processDirectory($dir))) {
-            echo '<div class="list"><span>Đường dẫn không tồn tại</span></div>
+    if (null == $dir || !is_dir(processDirectory($dir))) {
+        echo '<div class="list"><span>Đường dẫn không tồn tại</span></div>
             <div class="title">Chức năng</div>
             <ul class="list">
                 <li><img src="icon/list.png"/> <a href="index.php'.$pages['paramater_0'].'">Danh sách</a></li>
             </ul>';
-        } else {
-            $dir = processDirectory($dir);
+    } else {
+        $dir = processDirectory($dir);
 
-            if (isset($_POST['submit'])) {
-                echo '<div class="notice_failure">';
+        if (isset($_POST['submit'])) {
+            echo '<div class="notice_failure">';
 
-                if (empty($_POST['name'])) {
-                    echo 'Chưa nhập đầy đủ thông tin';
-                } elseif (0 === intval($_POST['type']) && file_exists($dir.'/'.$_POST['name'])) {
-                    echo 'Tên đã tồn tại dạng thư mục hoặc tập tin';
-                } elseif (1 === intval($_POST['type']) && file_exists($dir.'/'.$_POST['name'])) {
-                    echo 'Tên đã tồn tại dạng thư mục hoặc tập tin';
-                } elseif (isNameError($_POST['name'])) {
-                    echo 'Tên không hợp lệ';
-                } else {
-                    if (0 === intval($_POST['type'])) {
-                        if (!@mkdir($dir.'/'.$_POST['name'])) {
-                            echo 'Tạo thư mục thất bại';
-                        } else {
-                            goURL('index.php?dir='.$dirEncode.$pages['paramater_1']);
-                        }
-                    } elseif (1 === intval($_POST['type'])) {
-                        if (!@file_put_contents($dir.'/'.$_POST['name'], '...')) {
-                            echo 'Tạo tập tin thất bại';
-                        } else {
-                            goURL('index.php?dir='.$dirEncode.$pages['paramater_1']);
-                        }
+            if (empty($_POST['name'])) {
+                echo 'Chưa nhập đầy đủ thông tin';
+            } elseif (0 === intval($_POST['type']) && file_exists($dir.'/'.$_POST['name'])) {
+                echo 'Tên đã tồn tại dạng thư mục hoặc tập tin';
+            } elseif (1 === intval($_POST['type']) && file_exists($dir.'/'.$_POST['name'])) {
+                echo 'Tên đã tồn tại dạng thư mục hoặc tập tin';
+            } elseif (isNameError($_POST['name'])) {
+                echo 'Tên không hợp lệ';
+            } else {
+                if (0 === intval($_POST['type'])) {
+                    if (!@mkdir($dir.'/'.$_POST['name'])) {
+                        echo 'Tạo thư mục thất bại';
                     } else {
-                        echo 'Lựa chọn không hợp lệ';
+                        goURL('index.php?dir='.$dirEncode.$pages['paramater_1']);
                     }
+                } elseif (1 === intval($_POST['type'])) {
+                    if (!@file_put_contents($dir.'/'.$_POST['name'], '...')) {
+                        echo 'Tạo tập tin thất bại';
+                    } else {
+                        goURL('index.php?dir='.$dirEncode.$pages['paramater_1']);
+                    }
+                } else {
+                    echo 'Lựa chọn không hợp lệ';
                 }
-
-                echo '</div>';
             }
 
-            echo '<div class="list">
+            echo '</div>';
+        }
+
+        echo '<div class="list">
                 <span>'.printPath($dir, true).'</span><hr/>
                 <form action="create.php?dir='.$dirEncode.$pages['paramater_1'].'" method="post">
                     <span class="bull">&bull;</span>Tên thư mục hoặc tập tin:<br/>
@@ -68,9 +68,9 @@ define('ACCESS', true);
                 <li><img src="icon/import.png"/> <a href="import.php?dir='.$dirEncode.$pages['paramater_1'].'">Nhập khẩu tập tin</a></li>
                 <li><img src="icon/list.png"/> <a href="index.php?dir='.$dirEncode.$pages['paramater_1'].'">Danh sách</a></li>
             </ul>';
-        }
-
-        include_once 'footer.php';
-    } else {
-        goURL('login.php');
     }
+
+    include_once 'footer.php';
+} else {
+    goURL('login.php');
+}

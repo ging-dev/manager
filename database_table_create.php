@@ -1,110 +1,110 @@
 <?php
 
-    define('ACCESS', true);
-    define('PHPMYADMIN', true);
+define('ACCESS', true);
+define('PHPMYADMIN', true);
 
-    include_once 'function.php';
+include_once 'function.php';
 
-    if (IS_LOGIN) {
-        $title = 'Tạo bảng';
+if (IS_LOGIN) {
+    $title = 'Tạo bảng';
 
-        include_once 'database_connect.php';
+    include_once 'database_connect.php';
 
-        if (IS_CONNECT) {
-            $title .= ': '.DATABASE_NAME;
+    if (IS_CONNECT) {
+        $title .= ': '.DATABASE_NAME;
 
-            include_once 'header.php';
+        include_once 'header.php';
 
-            $table = null;
-            $column = null;
-            $default = null;
-            $length = null;
-            $type = null;
-            $collection = null;
-            $attributes = null;
-            $engine_storage = null;
-            $field_key = null;
-            $is_null = false;
-            $auto_increment = false;
-            $notice = null;
+        $table = null;
+        $column = null;
+        $default = null;
+        $length = null;
+        $type = null;
+        $collection = null;
+        $attributes = null;
+        $engine_storage = null;
+        $field_key = null;
+        $is_null = false;
+        $auto_increment = false;
+        $notice = null;
 
-            if (isset($_POST['submit'])) {
-                $table = addslashes($_POST['table']);
-                $column = addslashes($_POST['column']);
-                $default = addslashes($_POST['default']);
-                $length = addslashes($_POST['length']);
-                $type = addslashes($_POST['type']);
-                $collection = addslashes($_POST['collection']);
-                $attributes = addslashes($_POST['attributes']);
-                $engine_storage = addslashes($_POST['engine_storage']);
-                $field_key = addslashes($_POST['field_key']);
-                $is_null = isset($_POST['is_null']);
-                $auto_increment = isset($_POST['auto_increment']);
-                $notice = '<div class="notice_failure">';
+        if (isset($_POST['submit'])) {
+            $table = addslashes($_POST['table']);
+            $column = addslashes($_POST['column']);
+            $default = addslashes($_POST['default']);
+            $length = addslashes($_POST['length']);
+            $type = addslashes($_POST['type']);
+            $collection = addslashes($_POST['collection']);
+            $attributes = addslashes($_POST['attributes']);
+            $engine_storage = addslashes($_POST['engine_storage']);
+            $field_key = addslashes($_POST['field_key']);
+            $is_null = isset($_POST['is_null']);
+            $auto_increment = isset($_POST['auto_increment']);
+            $notice = '<div class="notice_failure">';
 
-                if (MYSQL_COLLECTION_NONE != $collection && !preg_match('#^(.+?)'.MYSQL_COLLECTION_SPLIT.'(.+?)$#i', $collection, $matches)) {
-                    $notice .= 'Mã hóa - Đối chiếu không hợp lệ';
-                } elseif (empty($table)) {
-                    $notice .= 'Chưa nhập tên bảng';
-                } elseif (empty($column)) {
-                    $notice .= 'Chưa nhập tên cột';
-                } elseif (!empty($length) && !preg_match('#\\b[0-9]+\\b#', $length)) {
-                    $notice .= 'Độ dài không hợp lệ';
-                } else {
-                    $type_put = $type.(false == empty($length) ? "($length)" : null);
-                    $collection_put = MYSQL_COLLECTION_NONE == $collection ? null : 'CHARACTER SET '.$matches[1].' COLLATE '.$matches[2];
-                    $attributes_put = MYSQL_ATTRIBUTES_NONE == $attributes ? null : $attributes;
-                    $null_put = $is_null ? 'NULL' : 'NOT NULL';
-                    $default_put = null == $default ? null : "DEFAULT '$default'";
-                    $auto_increment_put = $auto_increment ? 'AUTO_INCREMENT' : null;
-                    $field_key_put = MYSQL_FIELD_KEY_NONE == $field_key ? null : ", $field_key(`$column`)";
+            if (MYSQL_COLLECTION_NONE != $collection && !preg_match('#^(.+?)'.MYSQL_COLLECTION_SPLIT.'(.+?)$#i', $collection, $matches)) {
+                $notice .= 'Mã hóa - Đối chiếu không hợp lệ';
+            } elseif (empty($table)) {
+                $notice .= 'Chưa nhập tên bảng';
+            } elseif (empty($column)) {
+                $notice .= 'Chưa nhập tên cột';
+            } elseif (!empty($length) && !preg_match('#\\b[0-9]+\\b#', $length)) {
+                $notice .= 'Độ dài không hợp lệ';
+            } else {
+                $type_put = $type.(false == empty($length) ? "($length)" : null);
+                $collection_put = MYSQL_COLLECTION_NONE == $collection ? null : 'CHARACTER SET '.$matches[1].' COLLATE '.$matches[2];
+                $attributes_put = MYSQL_ATTRIBUTES_NONE == $attributes ? null : $attributes;
+                $null_put = $is_null ? 'NULL' : 'NOT NULL';
+                $default_put = null == $default ? null : "DEFAULT '$default'";
+                $auto_increment_put = $auto_increment ? 'AUTO_INCREMENT' : null;
+                $field_key_put = MYSQL_FIELD_KEY_NONE == $field_key ? null : ", $field_key(`$column`)";
 
-                    $sql = "CREATE TABLE `$table` ";
-                    $sql .= "(`$column` ";
-                    $sql .= $type_put;
+                $sql = "CREATE TABLE `$table` ";
+                $sql .= "(`$column` ";
+                $sql .= $type_put;
 
-                    if (null != $attributes_put) {
-                        $sql .= ' '.$attributes_put;
-                    }
-
-                    $sql .= ' '.$null_put;
-
-                    if (null != $default_put) {
-                        $sql .= ' '.$default_put;
-                    }
-
-                    if (null != $auto_increment_put) {
-                        $sql .= ' '.$auto_increment_put;
-                    }
-
-                    if (null != $field_key_put) {
-                        $sql .= $field_key_put;
-                    }
-
-                    $sql .= ') ENGINE='.$engine_storage;
-
-                    if (null != $collection_put) {
-                        $sql .= ' '.$collection_put;
-                    }
-
-                    if (null != $auto_increment_put) {
-                        $sql .= ' '.$auto_increment_put.'=1';
-                    }
-
-                    if (!@mysqli_query($conn, $sql)) {
-                        $notice .= 'Lỗi tạo bảng: '.mysqli_error($conn);
-                    } else {
-                        goURL('database_tables.php'.DATABASE_NAME_PARAMATER_0);
-                    }
+                if (null != $attributes_put) {
+                    $sql .= ' '.$attributes_put;
                 }
 
-                $collection = MYSQL_COLLECTION_NONE != $collection && isset($matches) ? $matches[2] : MYSQL_COLLECTION_NONE;
-                $notice .= '</div>';
+                $sql .= ' '.$null_put;
+
+                if (null != $default_put) {
+                    $sql .= ' '.$default_put;
+                }
+
+                if (null != $auto_increment_put) {
+                    $sql .= ' '.$auto_increment_put;
+                }
+
+                if (null != $field_key_put) {
+                    $sql .= $field_key_put;
+                }
+
+                $sql .= ') ENGINE='.$engine_storage;
+
+                if (null != $collection_put) {
+                    $sql .= ' '.$collection_put;
+                }
+
+                if (null != $auto_increment_put) {
+                    $sql .= ' '.$auto_increment_put.'=1';
+                }
+
+                if (!@mysqli_query($conn, $sql)) {
+                    $notice .= 'Lỗi tạo bảng: '.mysqli_error($conn);
+                } else {
+                    goURL('database_tables.php'.DATABASE_NAME_PARAMATER_0);
+                }
             }
 
-            echo '<div class="title"><div class="ellipsis">'.$title.'</div></div>';
-            echo $notice;
-            echo '<div class="list">
+            $collection = MYSQL_COLLECTION_NONE != $collection && isset($matches) ? $matches[2] : MYSQL_COLLECTION_NONE;
+            $notice .= '</div>';
+        }
+
+        echo '<div class="title"><div class="ellipsis">'.$title.'</div></div>';
+        echo $notice;
+        echo '<div class="list">
                 <form action="database_table_create.php'.DATABASE_NAME_PARAMATER_0.'" method="post">
                     <span class="bull">&bull;</span>Tên bảng:<br/>
                     <input type="text" name="table" value="'.stripslashes($table).'" size="18"/><hr/>
@@ -134,34 +134,34 @@
             <ul class="list">
                 <li><img src="icon/database_table.png"/> <a href="database_tables.php'.DATABASE_NAME_PARAMATER_0.'">Danh sách bảng</a></li>';
 
-            if (IS_DATABASE_ROOT) {
-                echo '<li><img src="icon/database.png"/> <a href="database_lists.php">Danh sách database</a></li>';
-            }
+        if (IS_DATABASE_ROOT) {
+            echo '<li><img src="icon/database.png"/> <a href="database_lists.php">Danh sách database</a></li>';
+        }
 
-            echo '</ul>';
-        } elseif (ERROR_CONNECT == false && ERROR_SELECT_DB && IS_DATABASE_ROOT) {
-            include_once 'header.php';
+        echo '</ul>';
+    } elseif (ERROR_CONNECT == false && ERROR_SELECT_DB && IS_DATABASE_ROOT) {
+        include_once 'header.php';
 
-            echo '<div class="title">'.$title.'</div>
+        echo '<div class="title">'.$title.'</div>
             <div class="list">Không thể chọn database</div>
             <div class="title">Chức năng</div>
             <ul class="list">
                 <li><img src="icon/database.png"/> <a href="database_lists.php">Danh sách database</a></li>
             </ul>';
-        } else {
-            include_once 'header.php';
+    } else {
+        include_once 'header.php';
 
-            echo '<div class="title">'.$title.'</div>
+        echo '<div class="title">'.$title.'</div>
             <div class="list">Lỗi cấu hình hoặc không kết nối được</div>
             <div class="title">Chức năng</div>
             <ul class="list">
                 <li><img src="icon/disconnect.png"/> <a href="database_disconnect.php">Ngắt kết nối database</a></li>
             </ul>';
-        }
-
-        include_once 'footer.php';
-    } else {
-        goURL('login.php');
     }
 
-    include_once 'database_close.php';
+    include_once 'footer.php';
+} else {
+    goURL('login.php');
+}
+
+include_once 'database_close.php';

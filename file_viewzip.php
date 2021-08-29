@@ -2,196 +2,196 @@
 
 define('ACCESS', true);
 
-    include_once 'function.php';
+include_once 'function.php';
 
-    if (IS_LOGIN) {
-        $title = 'Xem tập tin nén';
-        $format = getFormat($name);
+if (IS_LOGIN) {
+    $title = 'Xem tập tin nén';
+    $format = getFormat($name);
 
-        if (null == $dir || null == $name || !is_file(processDirectory($dir.'/'.$name))) {
-            include_once 'header.php';
+    if (null == $dir || null == $name || !is_file(processDirectory($dir.'/'.$name))) {
+        include_once 'header.php';
 
-            echo '<div class="title">'.$title.'</div>
+        echo '<div class="title">'.$title.'</div>
             <div class="list"><span>Đường dẫn không tồn tại</span></div>
             <div class="title">Chức năng</div>
             <ul class="list">
                 <li><img src="icon/list.png"/> <a href="index.php'.$pages['paramater_0'].'">Danh sách</a></li>
             </ul>';
-        } elseif (!in_array($format, ['zip', 'jar'])) {
-            include_once 'header.php';
+    } elseif (!in_array($format, ['zip', 'jar'])) {
+        include_once 'header.php';
 
-            echo '<div class="title">'.$title.'</div>
+        echo '<div class="title">'.$title.'</div>
             <div class="list"><span>Tập tin không phải zip</span></div>
             <div class="title">Chức năng</div>
             <ul class="list">
                 <li><img src="icon/list.png"/> <a href="index.php?dir='.$dirEncode.$pages['paramater_1'].'">Danh sách</a></li>
             </ul>';
-        } else {
-            $title .= ':'.$name;
+    } else {
+        $title .= ':'.$name;
 
-            include_once 'header.php';
-            include_once 'pclzip.class.php';
+        include_once 'header.php';
+        include_once 'pclzip.class.php';
 
-            $path = isset($_GET['path']) && !empty($_GET['path']) ? processPathZip($_GET['path']) : null;
-            $dir = processDirectory($dir);
-            $format = getFormat($name);
-            $zip = new PclZIP($dir.'/'.$name);
-            $lists = $zip->listContent();
-            $arrays = ['folders' => [], 'files' => []];
+        $path = isset($_GET['path']) && !empty($_GET['path']) ? processPathZip($_GET['path']) : null;
+        $dir = processDirectory($dir);
+        $format = getFormat($name);
+        $zip = new PclZIP($dir.'/'.$name);
+        $lists = $zip->listContent();
+        $arrays = ['folders' => [], 'files' => []];
 
-            if (!$lists) {
-                echo '<div class="title">'.$title.'</div>
+        if (!$lists) {
+            echo '<div class="title">'.$title.'</div>
                 <div class="list">
                     <span>'.printPath($dir.'/'.$name).'</span><hr/>
                     <span>Tập tin nén bị lỗi không mở được</span>
                 </div>';
-            } else {
-                $base = null == $path || empty($path) ? null : $path.'/';
+        } else {
+            $base = null == $path || empty($path) ? null : $path.'/';
 
-                foreach ($lists as $entry) {
-                    $filename = $entry['filename'];
+            foreach ($lists as $entry) {
+                $filename = $entry['filename'];
 
-                    if (!str_contains($filename, '/') && null == $base) {
-                        $arrays['files'][$filename] = ['path' => $filename, 'name' => $filename, 'folder' => false, 'size' => $entry['size']];
-                    } elseif (preg_match('#('.$base.'(.+?))(/|$)+#', $filename, $matches)) {
-                        if ('/' == $matches[3] && !isset($arrays['folders'][$matches[2]])) {
-                            $arrays['folders'][$matches[2]] = ['path' => $matches[1], 'name' => $matches[2], 'folder' => true];
-                        } elseif ('/' != $matches[3] && !$entry['folder']) {
-                            $arrays['files'][$matches[2]] = ['path' => $matches[1], 'name' => $matches[2], 'folder' => false, 'size' => $entry['size']];
-                        }
+                if (!str_contains($filename, '/') && null == $base) {
+                    $arrays['files'][$filename] = ['path' => $filename, 'name' => $filename, 'folder' => false, 'size' => $entry['size']];
+                } elseif (preg_match('#('.$base.'(.+?))(/|$)+#', $filename, $matches)) {
+                    if ('/' == $matches[3] && !isset($arrays['folders'][$matches[2]])) {
+                        $arrays['folders'][$matches[2]] = ['path' => $matches[1], 'name' => $matches[2], 'folder' => true];
+                    } elseif ('/' != $matches[3] && !$entry['folder']) {
+                        $arrays['files'][$matches[2]] = ['path' => $matches[1], 'name' => $matches[2], 'folder' => false, 'size' => $entry['size']];
                     }
                 }
+            }
 
-                $sorts = [];
+            $sorts = [];
 
-                if (count($arrays['folders']) > 0) {
-                    ksort($arrays['folders']);
+            if (count($arrays['folders']) > 0) {
+                ksort($arrays['folders']);
 
-                    foreach ($arrays['folders'] as $entry) {
-                        $sorts[] = $entry;
-                    }
+                foreach ($arrays['folders'] as $entry) {
+                    $sorts[] = $entry;
                 }
+            }
 
-                if (count($arrays['files']) > 0) {
-                    ksort($arrays['files']);
+            if (count($arrays['files']) > 0) {
+                ksort($arrays['files']);
 
-                    foreach ($arrays['files'] as $entry) {
-                        $sorts[] = $entry;
-                    }
+                foreach ($arrays['files'] as $entry) {
+                    $sorts[] = $entry;
                 }
+            }
 
-                array_splice($arrays, 0, count($arrays));
+            array_splice($arrays, 0, count($arrays));
 
-                $arrays = $sorts;
-                $count = count($arrays);
-                $root = 'root';
-                $html = null;
+            $arrays = $sorts;
+            $count = count($arrays);
+            $root = 'root';
+            $html = null;
 
-                array_splice($sorts, 0, count($sorts));
-                unset($sorts);
+            array_splice($sorts, 0, count($sorts));
+            unset($sorts);
 
-                if (null != $path && str_contains($path, '/')) {
-                    $array = explode('/', preg_replace('|^/(.*?)$|', '\1', $path));
-                    $html = '/<a href="file_viewzip.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">'.$root.'</a>';
-                    $item = null;
-                    $url = null;
+            if (null != $path && str_contains($path, '/')) {
+                $array = explode('/', preg_replace('|^/(.*?)$|', '\1', $path));
+                $html = '/<a href="file_viewzip.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">'.$root.'</a>';
+                $item = null;
+                $url = null;
 
-                    foreach ($array as $key => $entry) {
-                        if (0 === $key) {
-                            $seperator = preg_match('|^\/(.*?)$|', $path) ? '/' : null;
-                            $item = $seperator.$entry;
-                        } else {
-                            $item = '/'.$entry;
-                        }
-
-                        if ($key < count($array) - 1) {
-                            $html .= '/<a href="file_viewzip.php?dir='.$dirEncode.'&name='.$name.'&path='.rawurlencode($url.$item).$pages['paramater_1'].'">';
-                        } else {
-                            $html .= '/';
-                        }
-
-                        $url .= $item;
-
-                        if (strlen($entry) <= 8) {
-                            $html .= $entry;
-                        } else {
-                            $html .= substr($entry, 0, 8).'...';
-                        }
-
-                        if ($key < count($array) - 1) {
-                            $html .= '</a>';
-                        }
-                    }
-                } else {
-                    if (null == $path) {
-                        $html = '/'.$root;
+                foreach ($array as $key => $entry) {
+                    if (0 === $key) {
+                        $seperator = preg_match('|^\/(.*?)$|', $path) ? '/' : null;
+                        $item = $seperator.$entry;
                     } else {
-                        $html = '/<a href="file_viewzip.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">'.$root.'</a>/'.$path;
+                        $item = '/'.$entry;
+                    }
+
+                    if ($key < count($array) - 1) {
+                        $html .= '/<a href="file_viewzip.php?dir='.$dirEncode.'&name='.$name.'&path='.rawurlencode($url.$item).$pages['paramater_1'].'">';
+                    } else {
+                        $html .= '/';
+                    }
+
+                    $url .= $item;
+
+                    if (strlen($entry) <= 8) {
+                        $html .= $entry;
+                    } else {
+                        $html .= substr($entry, 0, 8).'...';
+                    }
+
+                    if ($key < count($array) - 1) {
+                        $html .= '</a>';
                     }
                 }
+            } else {
+                if (null == $path) {
+                    $html = '/'.$root;
+                } else {
+                    $html = '/<a href="file_viewzip.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">'.$root.'</a>/'.$path;
+                }
+            }
 
-                echo '<script language="javascript" src="checkbox.js"></script>';
-                echo '<div class="title">'.$html.'</div>';
-                echo '<ul class="list_file">';
-                echo '<li class="normal">
+            echo '<script language="javascript" src="checkbox.js"></script>';
+            echo '<div class="title">'.$html.'</div>';
+            echo '<ul class="list_file">';
+            echo '<li class="normal">
                     <span>'.printPath($dir.'/'.$name).'</span>
                 </li>';
 
-                if (null != $path) {
-                    $back = strrchr($path, '/');
+            if (null != $path) {
+                $back = strrchr($path, '/');
 
-                    if (false !== $back) {
-                        $back = 'file_viewzip.php?dir='.$dirEncode.'&name='.$name.'&path='.rawurlencode(substr($path, 0, strlen($path) - strlen($back))).$pages['paramater_1'];
-                    } else {
-                        $back = 'file_viewzip.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'];
-                    }
+                if (false !== $back) {
+                    $back = 'file_viewzip.php?dir='.$dirEncode.'&name='.$name.'&path='.rawurlencode(substr($path, 0, strlen($path) - strlen($back))).$pages['paramater_1'];
+                } else {
+                    $back = 'file_viewzip.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'];
+                }
 
-                    echo '<li class="normal">
-                        <img src="icon/back.png" style="margin-left: 5px; margin-right: 5px"/> 
+                echo '<li class="normal">
+                        <img src="icon/back.png" style="margin-left: 5px; margin-right: 5px"/>
                         <a href="'.$back.'">
                             <strong class="back">...</strong>
                         </a>
                     </li>';
-                }
+            }
 
-                if ($count <= 0) {
-                    echo '<li class="normal"><img src="icon/empty.png"/> <span class="empty">Không có thư mục hoặc tập tin</span></li>';
-                } else {
-                    foreach ($arrays as $value) {
-                        $pathEncode = rawurlencode($value['path']);
+            if ($count <= 0) {
+                echo '<li class="normal"><img src="icon/empty.png"/> <span class="empty">Không có thư mục hoặc tập tin</span></li>';
+            } else {
+                foreach ($arrays as $value) {
+                    $pathEncode = rawurlencode($value['path']);
 
-                        if ($value['folder']) {
-                            echo '<li class="folder">
+                    if ($value['folder']) {
+                        echo '<li class="folder">
                                 <div>
                                     <img src="icon/folder.png" style="margin-left: 5px"/>
                                     <a href="file_viewzip.php?dir='.$dirEncode.'&name='.$name.'&path='.$pathEncode.$pages['paramater_1'].'">'.$value['name'].'</a>
                                 </div>
                             </li>';
-                        } else {
-                            $icon = 'unknown';
-                            $type = getFormat($value['name']);
+                    } else {
+                        $icon = 'unknown';
+                        $type = getFormat($value['name']);
 
-                            if (in_array($type, $formats['other'])) {
-                                $icon = $type;
-                            } elseif (in_array($type, $formats['text'])) {
-                                $icon = $type;
-                            } elseif (in_array($type, $formats['archive'])) {
-                                $icon = $type;
-                            } elseif (in_array($type, $formats['audio'])) {
-                                $icon = $type;
-                            } elseif (in_array($type, $formats['font'])) {
-                                $icon = $type;
-                            } elseif (in_array($type, $formats['binary'])) {
-                                $icon = $type;
-                            } elseif (in_array($type, $formats['document'])) {
-                                $icon = $type;
-                            } elseif (in_array($type, $formats['image'])) {
-                                $icon = 'image';
-                            } elseif (in_array(strtolower(str_contains($name, '.') ? substr($name, 0, strpos($name, '.')) : $name), $formats['source'])) {
-                                $icon = strtolower(str_contains($name, '.') ? substr($name, 0, strpos($name, '.')) : $name);
-                            }
+                        if (in_array($type, $formats['other'])) {
+                            $icon = $type;
+                        } elseif (in_array($type, $formats['text'])) {
+                            $icon = $type;
+                        } elseif (in_array($type, $formats['archive'])) {
+                            $icon = $type;
+                        } elseif (in_array($type, $formats['audio'])) {
+                            $icon = $type;
+                        } elseif (in_array($type, $formats['font'])) {
+                            $icon = $type;
+                        } elseif (in_array($type, $formats['binary'])) {
+                            $icon = $type;
+                        } elseif (in_array($type, $formats['document'])) {
+                            $icon = $type;
+                        } elseif (in_array($type, $formats['image'])) {
+                            $icon = 'image';
+                        } elseif (in_array(strtolower(str_contains($name, '.') ? substr($name, 0, strpos($name, '.')) : $name), $formats['source'])) {
+                            $icon = strtolower(str_contains($name, '.') ? substr($name, 0, strpos($name, '.')) : $name);
+                        }
 
-                            echo '<li class="file">
+                        echo '<li class="file">
                                 <p>
                                     <img src="icon/mime/'.$icon.'.png" style="margin-left: 5px"/>
                                     <span>'.$value['name'].'</span>
@@ -200,14 +200,14 @@ define('ACCESS', true);
                                     <span class="size">'.size($value['size']).'</span>
                                 </p>
                             </li>';
-                        }
                     }
                 }
-
-                echo '</ul>';
             }
 
-            echo '<div class="title">Chức năng</div>
+            echo '</ul>';
+        }
+
+        echo '<div class="title">Chức năng</div>
             <ul class="list">
                 <li><img src="icon/info.png"/> <a href="file.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">Thông tin</a></li>
                 <li><img src="icon/unzip.png"/> <a href="file_unzip.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">Giải nén</a></li>
@@ -219,9 +219,9 @@ define('ACCESS', true);
                 <li><img src="icon/access.png"/> <a href="file_chmod.php?dir='.$dirEncode.'&name='.$name.$pages['paramater_1'].'">Chmod</a></li>
                 <li><img src="icon/list.png"/> <a href="index.php?dir='.$dirEncode.$pages['paramater_1'].'">Danh sách</a></li>
             </ul>';
-        }
-
-        include_once 'footer.php';
-    } else {
-        goURL('login.php');
     }
+
+    include_once 'footer.php';
+} else {
+    goURL('login.php');
+}

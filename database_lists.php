@@ -1,38 +1,38 @@
 <?php
 
-    define('ACCESS', true);
-    define('PHPMYADMIN', true);
+define('ACCESS', true);
+define('PHPMYADMIN', true);
 
-    include_once 'function.php';
+include_once 'function.php';
 
-    if (IS_LOGIN) {
-        $title = 'Danh sách database';
+if (IS_LOGIN) {
+    $title = 'Danh sách database';
 
-        include_once 'database_connect.php';
+    include_once 'database_connect.php';
 
-        if (IS_CONNECT && IS_DATABASE_ROOT) {
-            if (isset($_GET['action']) && 'delete' == $_GET['action']) {
-                $title = 'Xóa database';
-                $name = isset($_GET['name']) && false == empty($_GET['name']) ? addslashes($_GET['name']) : null;
+    if (IS_CONNECT && IS_DATABASE_ROOT) {
+        if (isset($_GET['action']) && 'delete' == $_GET['action']) {
+            $title = 'Xóa database';
+            $name = isset($_GET['name']) && false == empty($_GET['name']) ? addslashes($_GET['name']) : null;
 
-                if (null != $name && isDatabaseExists($name, null, true)) {
-                    $title .= ': '.$name;
+            if (null != $name && isDatabaseExists($name, null, true)) {
+                $title .= ': '.$name;
 
-                    include_once 'header.php';
+                include_once 'header.php';
 
-                    echo '<div class="title"><div class="ellipsis">'.$title.'</div></div>';
+                echo '<div class="title"><div class="ellipsis">'.$title.'</div></div>';
 
-                    if (isset($_POST['accept'])) {
-                        if (!mysqli_query($conn, "DROP DATABASE `$name`")) {
-                            echo '<div class="notice_failure">Xóa database thất bại: '.mysqli_error().'</div>';
-                        } else {
-                            goURL('database_lists.php');
-                        }
-                    } elseif (isset($_POST['not'])) {
+                if (isset($_POST['accept'])) {
+                    if (!mysqli_query($conn, "DROP DATABASE `$name`")) {
+                        echo '<div class="notice_failure">Xóa database thất bại: '.mysqli_error().'</div>';
+                    } else {
                         goURL('database_lists.php');
                     }
+                } elseif (isset($_POST['not'])) {
+                    goURL('database_lists.php');
+                }
 
-                    echo '<div class="list">
+                echo '<div class="list">
                         <form action="database_lists.php?action=delete&name='.stripslashes($name).'" method="post">
                             <span>Bạn có thực sự muốn xóa database không, mọi thứ trong database sẽ bị xóa hết?</span><hr/>
                             <center>
@@ -41,30 +41,30 @@
                             </center>
                         </form>
                     </div>';
-                } else {
-                    include_once 'header.php';
-
-                    echo '<div class="title">'.$title.'</div>
-                    <div class="list">Tên database không tồn tại</div>';
-                }
-
-                echo '<ul class="list">
-                    <li><img src="icon/database.png"/> <a href="database_lists.php">Dang sách database</a></li>
-                </ul>';
             } else {
                 include_once 'header.php';
 
-                $query = mysqli_query($conn, 'SHOW DATABASES');
+                echo '<div class="title">'.$title.'</div>
+                    <div class="list">Tên database không tồn tại</div>';
+            }
 
-                if (is_object($query)) {
-                    echo '<div class="title">'.$title.'</div>
+            echo '<ul class="list">
+                    <li><img src="icon/database.png"/> <a href="database_lists.php">Dang sách database</a></li>
+                </ul>';
+        } else {
+            include_once 'header.php';
+
+            $query = mysqli_query($conn, 'SHOW DATABASES');
+
+            if (is_object($query)) {
+                echo '<div class="title">'.$title.'</div>
                     <ul class="list_database">';
 
-                    while ($assoc = mysqli_fetch_assoc($query)) {
-                        $name = $assoc['Database'];
-                        $count = mysqli_fetch_row(mysqli_query($conn, 'SELECT COUNT(*) FROM `information_schema`.`tables` WHERE `table_schema`="'.$name.'"'))[0];
+                while ($assoc = mysqli_fetch_assoc($query)) {
+                    $name = $assoc['Database'];
+                    $count = mysqli_fetch_row(mysqli_query($conn, 'SELECT COUNT(*) FROM `information_schema`.`tables` WHERE `table_schema`="'.$name.'"'))[0];
 
-                        echo '<li>
+                    echo '<li>
                             <p>
                                 <a href="database_lists.php?action=delete&name='.$name.'">
                                     <img src="icon/database.png"/>
@@ -78,41 +78,41 @@
                                 <span>bảng</span>
                             </p>
                         </li>';
-                    }
+                }
 
-                    echo '</ul>
+                echo '</ul>
                     <div class="title">Chức năng</div>
                     <ul class="list">
                         <li><img src="icon/database_create.png"/> <a href="database_create.php">Tạo database</a></li>
                     </ul>';
-                } else {
-                    echo '<div class="title">'.$title.'</div>
+            } else {
+                echo '<div class="title">'.$title.'</div>
                     <div class="list">Không thể lấy danh sách database</div>
                     <div class="title">Chức năng</div>
                     <ul class="list">
                         <li><img src="icon/disconnect.png"/> <a href="database_disconnect.php">Ngắt kết nối database</a></li>
                     </ul>';
-                }
             }
-        } elseif (IS_CONNECT && !IS_DATABASE_ROOT) {
-            echo '<div class="title">'.$title.'</div>
+        }
+    } elseif (IS_CONNECT && !IS_DATABASE_ROOT) {
+        echo '<div class="title">'.$title.'</div>
             <div class="list">Bạn đang kết nối tới một database không thể vào danh sách database</div>
             <div class="title">Chức năng</div>
             <ul class="list">
                 <li><img src="icon/disconnect.png"/> <a href="database_disconnect.php">Ngắt kết nối database</a></li>
             </ul>';
-        } else {
-            echo '<div class="title">'.$title.'</div>
+    } else {
+        echo '<div class="title">'.$title.'</div>
             <div class="list">Lỗi cấu hình hoặc không kết nối được</div>
             <div class="title">Chức năng</div>
             <ul class="list">
                 <li><img src="icon/disconnect.png"/> <a href="database_disconnect.php">Ngắt kết nối database</a></li>
             </ul>';
-        }
-
-        include_once 'footer.php';
-    } else {
-        goURL('login.php');
     }
 
-    include_once 'database_close.php';
+    include_once 'footer.php';
+} else {
+    goURL('login.php');
+}
+
+include_once 'database_close.php';

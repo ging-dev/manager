@@ -2,69 +2,69 @@
 
 define('ACCESS', true);
 
-    include_once 'function.php';
+include_once 'function.php';
 
-    if (IS_LOGIN) {
-        $title = 'Cài đặt';
-        $ref = $_POST['ref'] ?? (isset($_SERVER['HTTP_REFFRER']) ? $_SERVER['HTTP_REFERER'] : null);
-        $ref = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] != $ref ? $ref : null;
+if (IS_LOGIN) {
+    $title = 'Cài đặt';
+    $ref = $_POST['ref'] ?? (isset($_SERVER['HTTP_REFFRER']) ? $_SERVER['HTTP_REFERER'] : null);
+    $ref = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'] != $ref ? $ref : null;
 
-        include_once 'header.php';
+    include_once 'header.php';
 
-        echo '<div class="title">'.$title.'</div>';
+    echo '<div class="title">'.$title.'</div>';
 
-        $username = $configs['username'];
-        $passwordO = null;
-        $passwordN = null;
-        $verifyN = null;
-        $pageList = $configs['page_list'];
-        $pageFileEdit = $configs['page_file_edit'];
-        $pageFileEditLine = $configs['page_file_edit_line'];
-        $pageDatabaseListRows = $configs['page_database_list_rows'];
+    $username = $configs['username'];
+    $passwordO = null;
+    $passwordN = null;
+    $verifyN = null;
+    $pageList = $configs['page_list'];
+    $pageFileEdit = $configs['page_file_edit'];
+    $pageFileEditLine = $configs['page_file_edit_line'];
+    $pageDatabaseListRows = $configs['page_database_list_rows'];
 
-        if (isset($_POST['submit'])) {
-            $username = addslashes($_POST['username']);
-            $passwordO = addslashes($_POST['password_o']);
-            $passwordN = addslashes($_POST['password_n']);
-            $verifyN = addslashes($_POST['verify_n']);
-            $pageList = addslashes($_POST['page_list']);
-            $pageFileEdit = addslashes($_POST['page_file_edit']);
-            $pageFileEditLine = addslashes($_POST['page_file_edit_line']);
-            $pageDatabaseListRows = addslashes($_POST['page_database_list_rows']);
+    if (isset($_POST['submit'])) {
+        $username = addslashes($_POST['username']);
+        $passwordO = addslashes($_POST['password_o']);
+        $passwordN = addslashes($_POST['password_n']);
+        $verifyN = addslashes($_POST['verify_n']);
+        $pageList = addslashes($_POST['page_list']);
+        $pageFileEdit = addslashes($_POST['page_file_edit']);
+        $pageFileEditLine = addslashes($_POST['page_file_edit_line']);
+        $pageDatabaseListRows = addslashes($_POST['page_database_list_rows']);
 
-            if (empty($username)) {
-                echo '<div class="notice_failure">Chưa nhập tên đăng nhập</div>';
-            } elseif (strlen($username) < 3) {
-                echo '<div class="notice_failure">Tên đăng nhập phải lớn hơn 3 ký tự</div>';
-            } elseif (!empty($passwordO) && getPasswordEncode($passwordO) != $configs['password']) {
-                echo '<div class="notice_failure">Mật khẩu cũ không đúng</div>';
-            } elseif (!empty($passwordO) && (empty($passwordN) || empty($verifyN))) {
-                echo '<div class="notice_failure">Để thay đổi mật khẩu hãy nhập đủ hai mật khẩu</div>';
-            } elseif (!empty($passwordO) && $passwordN != $verifyN) {
-                echo '<div class="notice_failure">Hai mật khẩu không giống nhau</div>';
-            } elseif (!empty($passwordO) && strlen($passwordN) < 5) {
-                echo '<div class="notice_failure">Mật khẩu phải lớn hơn 5 ký tự</div>';
+        if (empty($username)) {
+            echo '<div class="notice_failure">Chưa nhập tên đăng nhập</div>';
+        } elseif (strlen($username) < 3) {
+            echo '<div class="notice_failure">Tên đăng nhập phải lớn hơn 3 ký tự</div>';
+        } elseif (!empty($passwordO) && getPasswordEncode($passwordO) != $configs['password']) {
+            echo '<div class="notice_failure">Mật khẩu cũ không đúng</div>';
+        } elseif (!empty($passwordO) && (empty($passwordN) || empty($verifyN))) {
+            echo '<div class="notice_failure">Để thay đổi mật khẩu hãy nhập đủ hai mật khẩu</div>';
+        } elseif (!empty($passwordO) && $passwordN != $verifyN) {
+            echo '<div class="notice_failure">Hai mật khẩu không giống nhau</div>';
+        } elseif (!empty($passwordO) && strlen($passwordN) < 5) {
+            echo '<div class="notice_failure">Mật khẩu phải lớn hơn 5 ký tự</div>';
+        } else {
+            if (createConfig($username, (!empty($passwordN) ? getPasswordEncode($passwordN) : $configs['password']), $pageList, $pageFileEdit, $pageFileEditLine, $pageDatabaseListRows, false)) {
+                include PATH_CONFIG;
+
+                $username = $configs['username'];
+                $passwordO = null;
+                $passwordN = null;
+                $verifyN = null;
+                $pageList = $configs['page_list'];
+                $pageFileEdit = $configs['page_file_edit'];
+                $pageFileEditLine = $configs['page_file_edit_line'];
+                $pageDatabaseListRows = addslashes($_POST['page_database_list_rows']);
+
+                echo '<div class="notice_succeed">Lưu thành công</div>';
             } else {
-                if (createConfig($username, (!empty($passwordN) ? getPasswordEncode($passwordN) : $configs['password']), $pageList, $pageFileEdit, $pageFileEditLine, $pageDatabaseListRows, false)) {
-                    include PATH_CONFIG;
-
-                    $username = $configs['username'];
-                    $passwordO = null;
-                    $passwordN = null;
-                    $verifyN = null;
-                    $pageList = $configs['page_list'];
-                    $pageFileEdit = $configs['page_file_edit'];
-                    $pageFileEditLine = $configs['page_file_edit_line'];
-                    $pageDatabaseListRows = addslashes($_POST['page_database_list_rows']);
-
-                    echo '<div class="notice_succeed">Lưu thành công</div>';
-                } else {
-                    echo '<div class="notice_failure">Lưu thất bại</div>';
-                }
+                echo '<div class="notice_failure">Lưu thất bại</div>';
             }
         }
+    }
 
-        echo '<div class="list">
+    echo '<div class="list">
             <form action="setting.php" method="post">
                 <span class="bull">&bull;</span>Tài khoản:<br/>
                 <input type="text" name="username" value="'.$username.'" size="18"/><br/>
@@ -90,15 +90,15 @@ define('ACCESS', true);
         <div class="title">Chức năng</div>
         <ul class="list">';
 
-        if (null != $ref) {
-            echo '<li><img src="icon/back.png"/> <a href="'.$ref.'">Quay lại</a></li>';
-        } else {
-            echo '<li><img src="icon/list.png"/> <a href="index.php">Danh sách</a></li>';
-        }
-
-        echo '</ul>';
-
-        include_once 'footer.php';
+    if (null != $ref) {
+        echo '<li><img src="icon/back.png"/> <a href="'.$ref.'">Quay lại</a></li>';
     } else {
-        goURL('login.php');
+        echo '<li><img src="icon/list.png"/> <a href="index.php">Danh sách</a></li>';
     }
+
+    echo '</ul>';
+
+    include_once 'footer.php';
+} else {
+    goURL('login.php');
+}
