@@ -43,7 +43,7 @@ define('ACCESS', true);
                 <span class="bull">&bull;</span><span>' . printPath($dir . '/' . $name) . '</span><hr/>
                 <form action="file_copy.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '" method="post">
                     <span class="bull">&bull;</span>Đường dẫn tập tin mới:<br/>
-                    <input type="text" name="path" value="' . (isset($_POST['path']) ? $_POST['path'] : $dir) . '" size="18"/><br/>
+                    <input type="text" name="path" value="' . ($_POST['path'] ?? $dir) . '" size="18"/><br/>
                     <input type="submit" name="submit" value="Sao chép"/>
                 </form>
             </div>

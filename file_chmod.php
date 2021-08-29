@@ -39,7 +39,7 @@ define('ACCESS', true);
                 <span class="bull">&bull;</span><span>' . printPath($dir . '/' . $name) . '</span><hr/>
                 <form action="file_chmod.php?dir=' . $dirEncode . '&name=' . $name . $pages['paramater_1'] . '" method="post">
                     <span class="bull">&bull;</span>Chế độ:<br/>
-                    <input type="text" name="mode" value="' . (isset($_POST['mode']) ? $_POST['mode'] : getChmod($dir . '/' . $name)) . '" size="18"/><br/>
+                    <input type="text" name="mode" value="' . ($_POST['mode'] ?? getChmod($dir . '/' . $name)) . '" size="18"/><br/>
                     <input type="submit" name="submit" value="Chmod"/>
                 </form>
             </div>

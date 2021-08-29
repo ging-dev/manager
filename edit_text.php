@@ -42,7 +42,7 @@ define('ACCESS', true);
                         $content = str_replace("\r\n", "\n", $content);
                         $content = str_replace("\r", "\n", $content);
 
-                        if (strpos($content, "\n") !== false) {
+                        if (str_contains($content, "\n")) {
                             $ex = explode("\n", $content);
                             $count = count($ex);
                             $end = $index + $configs['page_file_edit'] <= $count ? $index + $configs['page_file_edit'] : $count;
@@ -83,7 +83,7 @@ define('ACCESS', true);
                 $content = str_replace("\r\n", "\n", $content);
                 $content = str_replace("\r", "\n", $content);
 
-                if ($pageLine > 0 && strpos($content, "\n") !== false) {
+                if ($pageLine > 0 && str_contains($content, "\n")) {
                     $ex = explode("\n", $content);
                     $count = count($ex);
 
@@ -111,7 +111,7 @@ define('ACCESS', true);
 
                 if ($value == -1) {
                     $error_syntax = 'Không thể kiểm tra lỗi';
-                } elseif ($value == 255 || count($output) == 3) {
+                } elseif ($value == 255 || (is_countable($output) ? count($output) : 0) == 3) {
                     $error_syntax = $output[1];
                 } else {
                     $error_syntax = 'Không có lỗi';

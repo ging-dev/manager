@@ -43,10 +43,10 @@
                 {
                     global $MYSQL_DATA_TYPE;
 
-                    if (is_file(PATH_MYSQL_DATA_TYPE) && count($MYSQL_DATA_TYPE) <= 0) {
+                    if (is_file(PATH_MYSQL_DATA_TYPE) && (is_countable($MYSQL_DATA_TYPE) ? count($MYSQL_DATA_TYPE) : 0) <= 0) {
                         $json = jsonDecode(file_get_contents(PATH_MYSQL_DATA_TYPE), true);
 
-                        if ($json != null && count($json) > 0) {
+                        if ($json != null && (is_countable($json) ? count($json) : 0) > 0) {
                             $MYSQL_DATA_TYPE = $json;
                         }
                     }
@@ -74,10 +74,10 @@
                 {
                     global $MYSQL_COLLECTION;
 
-                    if (is_file(PATH_MYSQL_COLLECTION) && count($MYSQL_COLLECTION) <= 0) {
+                    if (is_file(PATH_MYSQL_COLLECTION) && (is_countable($MYSQL_COLLECTION) ? count($MYSQL_COLLECTION) : 0) <= 0) {
                         $json = jsonDecode(file_get_contents(PATH_MYSQL_COLLECTION), true);
 
-                        if ($json != null && count($json) > 0) {
+                        if ($json != null && (is_countable($json) ? count($json) : 0) > 0) {
                             $MYSQL_COLLECTION = $json;
                         }
                     }
@@ -107,10 +107,10 @@
                 {
                     global $MYSQL_ATTRIBUTES;
 
-                    if (is_file(PATH_MYSQL_ATTRIBUTES) && count($MYSQL_ATTRIBUTES) <= 0) {
+                    if (is_file(PATH_MYSQL_ATTRIBUTES) && (is_countable($MYSQL_ATTRIBUTES) ? count($MYSQL_ATTRIBUTES) : 0) <= 0) {
                         $json = jsonDecode(file_get_contents(PATH_MYSQL_ATTRIBUTES), true);
 
-                        if ($json != null && count($json) > 0) {
+                        if ($json != null && (is_countable($json) ? count($json) : 0) > 0) {
                             $MYSQL_ATTRIBUTES = $json;
                         }
                     }
@@ -134,10 +134,10 @@
                 {
                     global $MYSQL_FIELD_KEY;
 
-                    if (is_file(PATH_MYSQL_FIELD_KEY) && count($MYSQL_FIELD_KEY) <= 0) {
+                    if (is_file(PATH_MYSQL_FIELD_KEY) && (is_countable($MYSQL_FIELD_KEY) ? count($MYSQL_FIELD_KEY) : 0) <= 0) {
                         $json = jsonDecode(file_get_contents(PATH_MYSQL_FIELD_KEY), true);
 
-                        if ($json != null && count($json) > 0) {
+                        if ($json != null && (is_countable($json) ? count($json) : 0) > 0) {
                             $MYSQL_FIELD_KEY = $json;
                         }
                     }
@@ -161,10 +161,10 @@
                 {
                     global $MYSQL_ENGINE_STORAGE;
 
-                    if (is_file(PATH_MYSQL_ENGINE_STORAGE) && count($MYSQL_ENGINE_STORAGE) <= 0) {
+                    if (is_file(PATH_MYSQL_ENGINE_STORAGE) && (is_countable($MYSQL_ENGINE_STORAGE) ? count($MYSQL_ENGINE_STORAGE) : 0) <= 0) {
                         $json = jsonDecode(file_get_contents(PATH_MYSQL_ENGINE_STORAGE), true);
 
-                        if ($json != null && count($json) > 0) {
+                        if ($json != null && (is_countable($json) ? count($json) : 0) > 0) {
                             $MYSQL_ENGINE_STORAGE = $json;
                         }
                     }
@@ -287,10 +287,10 @@
                 {
                     global $MYSQL_DATA_TYPE;
 
-                    if (is_file(PATH_MYSQL_DATA_TYPE) && count($MYSQL_DATA_TYPE) <= 0) {
+                    if (is_file(PATH_MYSQL_DATA_TYPE) && (is_countable($MYSQL_DATA_TYPE) ? count($MYSQL_DATA_TYPE) : 0) <= 0) {
                         $json = jsonDecode(file_get_contents(PATH_MYSQL_DATA_TYPE), true);
 
-                        if ($json != null && count($json) > 0) {
+                        if ($json != null && (is_countable($json) ? count($json) : 0) > 0) {
                             $MYSQL_DATA_TYPE = $json;
                         }
                     }

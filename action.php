@@ -6,7 +6,7 @@ define('ACCESS', true);
 
     if (IS_LOGIN) {
         $title = 'Hành động';
-        $entry = isset($_POST['entry']) ? $_POST['entry'] : null;
+        $entry = $_POST['entry'] ?? null;
         $option = isset($_POST['option']) ? intval($_POST['option']) : -1;
 
         if ($dir == null || !is_dir(processDirectory($dir))) {
@@ -27,7 +27,7 @@ define('ACCESS', true);
             <ul class="list">
                 <li><img src="icon/list.png"/> <a href="index.php?dir=' . $dirEncode . $pages['paramater_1'] . '">Danh sách</a></li>
             </ul>';
-        } elseif (count($entry) <= 0) {
+        } elseif ((is_countable($entry) ? count($entry) : 0) <= 0) {
             include_once 'header.php';
 
             echo '<div class="title">' . $title . '</div>
@@ -94,7 +94,7 @@ define('ACCESS', true);
                     <span>' . printPath($dir, true) . '</span><hr/>
                     <form action="action.php?dir=' . $dirEncode . $pages['paramater_1'] . '" method="post">
                         <span class="bull">&bull;</span>Đường dẫn tập tin mới:<br/>
-                        <input type="text" name="path" value="' . (isset($_POST['path']) ? $_POST['path'] : $dir) . '" size="18"/><br/>
+                        <input type="text" name="path" value="' . ($_POST['path'] ?? $dir) . '" size="18"/><br/>
                         <input type="hidden" name="is_action" value="1"/>
                         <input type="hidden" name="option" value="' . $option . '"/>';
 
@@ -135,7 +135,7 @@ define('ACCESS', true);
                     <span>' . printPath($dir, true) . '</span><hr/>
                     <form action="action.php?dir=' . $dirEncode . $pages['paramater_1'] . '" method="post">
                         <span class="bull">&bull;</span>Đường dẫn tập tin mới:<br/>
-                        <input type="text" name="path" value="' . (isset($_POST['path']) ? $_POST['path'] : $dir) . '" size="18"/><br/>
+                        <input type="text" name="path" value="' . ($_POST['path'] ?? $dir) . '" size="18"/><br/>
                         <input type="hidden" name="is_action" value="1"/>
                         <input type="hidden" name="option" value="' . $option . '"/>';
 
@@ -211,9 +211,9 @@ define('ACCESS', true);
                     <span>' . printPath($dir, true) . '</span><hr/>
                     <form action="action.php?dir=' . $dirEncode . $pages['paramater_1'] . '" method="post">
                         <span class="bull">&bull;</span>Tên tập tin nén:<br/>
-                        <input type="text" name="name" value="' . (isset($_POST['name']) ? $_POST['name'] : 'archive.zip') . '" size="18"/><br/>
+                        <input type="text" name="name" value="' . ($_POST['name'] ?? 'archive.zip') . '" size="18"/><br/>
                         <span class="bull">&bull;</span>Đường dẫn lưu:<br/>
-                        <input type="text" name="path" value="' . (isset($_POST['path']) ? $_POST['path'] : $dir) . '" size="18"/><br/>
+                        <input type="text" name="path" value="' . ($_POST['path'] ?? $dir) . '" size="18"/><br/>
                         <input type="checkbox" name="is_delete" value="1"' . (isset($_POST['is_delete']) ? ' checked="checked"' : null) . '/> Xóa nguồn<br/>
                         <input type="hidden" name="is_action" value="1"/>
                         <input type="hidden" name="option" value="' . $option . '"/>';
@@ -249,9 +249,9 @@ define('ACCESS', true);
                     <span>' . printPath($dir, true) . '</span><hr/>
                     <form action="action.php?dir=' . $dirEncode . $pages['paramater_1'] . '" method="post">
                         <span class="bull">&bull;</span>Thư mục:<br/>
-                        <input type="text" name="folder" value="' . (isset($_POST['folder']) ? $_POST['folder'] : '755') . '" size="18"/><br/>
+                        <input type="text" name="folder" value="' . ($_POST['folder'] ?? '755') . '" size="18"/><br/>
                         <span class="bull">&bull;</span>Tập tin:<br/>
-                        <input type="text" name="file" value="' . (isset($_POST['file']) ? $_POST['file'] : '644') . '" size="18"/><br/>
+                        <input type="text" name="file" value="' . ($_POST['file'] ?? '644') . '" size="18"/><br/>
                         <input type="hidden" name="is_action" value="1"/>
                         <input type="hidden" name="option" value="' . $option . '"/>';
 
@@ -307,7 +307,7 @@ define('ACCESS', true);
 
                     if (!$isFailed) {
                         $isSucceed = true;
-                        $rand = md5(rand(1000, 99999) . '-' . $dir);
+                        $rand = md5(random_int(1000, 99999) . '-' . $dir);
                         $rand = substr($rand, 0, strlen($rand) >> 1);
 
                         foreach ($entry as $e) {
@@ -343,7 +343,7 @@ define('ACCESS', true);
                     <span>' . printPath($dir, true) . '</span><hr/>
                     <form action="action.php?dir=' . $dirEncode . $pages['paramater_1'] . '" method="post">';
 
-                for ($i = 0; $i < count($entry); ++$i) {
+                for ($i = 0; $i < (is_countable($entry) ? count($entry) : 0); ++$i) {
                     $entryPath = $dir . '/' . $entry[$i];
                     $entryName = $entry[$i];
 

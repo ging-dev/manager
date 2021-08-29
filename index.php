@@ -68,7 +68,7 @@
         $count = count($lists);
         $html = null;
 
-        if (!IS_INSTALL_ROOT_DIRECTORY && $dir != '/' && strpos($dir, '/') !== false) {
+        if (!IS_INSTALL_ROOT_DIRECTORY && $dir != '/' && str_contains($dir, '/')) {
             $array = explode('/', preg_replace('|^/(.*?)$|', '\1', $dir));
             $html = null;
             $item = null;
@@ -191,8 +191,8 @@
                             $icon = $type;
                         } elseif (in_array($type, $formats['image'])) {
                             $icon = 'image';
-                        } elseif (in_array(strtolower(strpos($name, '.') !== false ? substr($name, 0, strpos($name, '.')) : $name), $formats['source'])) {
-                            $icon = strtolower(strpos($name, '.') !== false ? substr($name, 0, strpos($name, '.')) : $name);
+                        } elseif (in_array(strtolower(str_contains($name, '.') ? substr($name, 0, strpos($name, '.')) : $name), $formats['source'])) {
+                            $icon = strtolower(str_contains($name, '.') ? substr($name, 0, strpos($name, '.')) : $name);
                             $isEdit = true;
                         } elseif (isFormatUnknown($name)) {
                             $icon = 'unknown';
