@@ -210,7 +210,7 @@ function getPasswordEncode($pass)
 
 function getFormat($name)
 {
-    return false !== strrchr($name, '.') ? strtolower(str_replace('.', null, strrchr($name, '.'))) : null;
+    return false !== strrchr($name, '.') ? strtolower(str_replace('.', '', strrchr($name, '.'))) : '';
 }
 
 function isFormatText($name)
@@ -256,6 +256,7 @@ function isURL($url)
 
 function processDirectory($var)
 {
+    $var = $var ?? '';
     $var = str_replace('\\', '/', $var);
     $var = preg_replace('#/\./#', '//', $var);
     $var = preg_replace('#/\.\./#', '//', $var);
